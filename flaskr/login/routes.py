@@ -4,7 +4,7 @@ from werkzeug.utils import redirect
 
 from . import login
 from .. import db
-from ..models import User
+from ..models import User, Server
 
 API_ENDPOINT = 'https://discord.com/api/v8'
 CLIENT_ID = '767749360586326026'
@@ -16,7 +16,7 @@ REDIRECT_URI = 'http://localhost:5000/discord/auth'
 def index():
     user = None
     if session.get('userid'):
-        user = User.query.filter_by(id=session.get('userid')).first()
+        user = User.query.filter_by(user_id=session.get('userid')).first()
     return render_template('login.html', user=user if user is not None else None, logged_in=session.get('logged_in'))
 
 
@@ -50,16 +50,19 @@ def discordlogin():
 
     s = s.json()
 
+    t = requests.get('https://discord.com/api/v8/users/@me/guilds',
+                     headers={'Authorization': 'Bearer ' + r['access_token']})
+
+    guilds_list = []
+    for i in t.json():
+        if Server.query.filter_by(guild_id=i['id']).first():
+            guilds_list.append([i['name'], i['id'], True if int(i['permissions']) & 8 == 8 else False])
+
+    session['guilds'] = guilds_list
     session['name'] = s['username'] + '#' + s['discriminator']
     session['userid'] = s['id']
     session['logged_in'] = True
-
-    user_exists = User.query.filter_by(id=session['userid']).first()
-
-    if not user_exists:
-        inserting_user = User(id=session['userid'], email=s['email'], username=session['name'])
-        db.session.add(inserting_user)
-        db.session.commit()
+    session['email'] = s['email']
 
     flash('Logged in succesfully, welcome ' + s['username'] + '#' + s['discriminator'] + '.', 'success')
     return redirect(url_for("index.index"))

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block nav_admin_dash %}active{% endblock %}
+
+{% block header %} mb-5{% endblock %}
+{% block content %}
+
+<h1 class="text-center">Admin Dashboard</h1>
+<div class="container">
+    <div class="container ">
+        <h4>Welcome, Administrator - {{ session['name'] }}</h4>
+        <hr>
+        <div class="row">
+            <div class="col-xs-4">
+                <a href="" class="btn btn-primary">Settings</a>
+                <a href="" class="btn btn-primary">Properties</a>
+            </div>
+        </div>
+        <hr>
+        <div class="container">
+            <div class="card-body tab-content">
+                <div class="tab-pane active" id="profile">
+                    <h6>SERVER SETTINGS</h6>
+                    <hr>
+                    <form id="serverSettings" method="POST">
+                        <div class="form-group">
+                            <label for="maxAccounts">Max Accounts</label>
+                            <input type="number" name="max_accounts" class="form-control" id="maxAccounts"
+                                   aria-describedby="maxAccountsHelp" value="{{ server.max_accounts }}">
+                            <small id="maxAccountsHelp" class="form-text text-muted">How many accounts a user can
+                                open.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="bankerRole">Banker Role</label>
+                            <input type="number" name="banker_role" class="form-control" id="bankerRole"
+                                   aria-describedby="bankerRoleHelp" value="{{ server.banker_role }}">
+                            <small id="bankerRoleHelp" class="form-text text-muted">The ID of the role of which Bankers
+                                have, for functions such as deleting accounts, adding money, and resetting
+                                users.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="currency">Currency</label>
+                            <input type="text" name="currency" class="form-control" id="currency"
+                                   aria-describedby="currencyHelp" value="{{ server.currency }}">
+                            <small id="currencyHelp" class="form-text text-muted">The currency form that will show in
+                                front of all currency numbers. (ex. £)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="startingAmount">Starting Amount</label>
+                            <input type="number" name="starting_amount" class="form-control" id="startingAmount"
+                                   aria-describedby="startingAmountHelp" value="{{ server.starting_amount }}">
+                            <small id="startingAmountHelp" class="form-text text-muted">The amount of money a new user
+                                will start with.</small>
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Update Settings" form="serverSettings">
+                        <button type="reset" class="btn btn-light">Reset Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
