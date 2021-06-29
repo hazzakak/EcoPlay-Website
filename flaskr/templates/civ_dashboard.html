@@ -1,59 +1,77 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Personal{% endblock %}
 {% block nav_personal_dash %}active{% endblock %}
 
 {% block header %} mb-5{% endblock %}
 {% block content %}
+
+
+<div id="createAccountModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark">Create an Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="accountCreate" method="POST">
+                    <div class="form-group">
+                        <label for="inputAccountName" class="text-dark">Account Name</label>
+                        <input type="text" class="form-control" id="inputAccountName" aria-describedby="accountNameHelp"
+                               placeholder="Enter account name" name="account_name">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" form="accountCreate" value="Create Account">
+                <button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h1 class="text-center">Personal Dashboard</h1>
 <div class="container">
     <div class="container ">
         <h4>{{ session['name'] }}</h4>
         <hr>
-        <p><strong>Networth: </strong>$302,000</p>
+        <p><strong>Networth: </strong>{{ server.currency }}{{ networth }}</p>
         <hr>
         <h4 class="mb-5">Properties</h4>
         <ol class="list-group list-group-numbered mb-5">
+            {% for p in properties%}
             <li class="list-group-item d-flex justify-content-between align-items-start bg-secondary">
                 <div class="ms-2 me-auto">
-                    <div class="fw-bold text-light">24/7 Sandy Shores</div>
+                    <div class="fw-bold text-light">{{ p.property_name }}</div>
                 </div>
-                <span class="badge bg-primary rounded-pill">$70,000</span>
+                <span class="badge bg-primary rounded-pill">{{ server.currency }}{{ p.property_value }}</span>
             </li>
-            <li class="list-group-item d-flex justify-content-between align-items-start bg-secondary">
+            {% endfor %}
+            {% if properties.count() == 0 %}
+            <li class="list-group-item d-flex justify-content-between align-items-start bg-warning">
                 <div class="ms-2 me-auto">
-                    <div class="fw-bold text-light">Liquor Ace</div>
+                    <div class="fw-bold text-light">You do not own any properties ;(</div>
                 </div>
-                <span class="badge bg-primary rounded-pill">$35,000</span>
             </li>
-            <li class="list-group-item d-flex justify-content-between align-items-start bg-secondary">
-                <div class="ms-2 me-auto text-light">
-                    <div class="fw-bold">24/7 Harmony</div>
-                </div>
-                <span class="badge bg-primary rounded-pill">$80,000</span>
-            </li>
+            {% endif %}
         </ol>
     </div>
     <div class="row">
         <h4>Accounts
-            <button type="button" class="btn btn-light float-right">Create Account</button>
+            <button type="button" class="btn btn-light float-right" data-bs-toggle="modal"
+                    data-bs-target="#createAccountModal">Create Account
+            </button>
         </h4>
     </div>
     <div class="row">
+        {% for a in accounts %}
         <div class="col border border-light mx-2">
-            <h3>Main Account </h3>
+            <h3>{{ a.account_name }}</h3>
             <hr>
-            <p>Total: $80,241</p>
-            <button type="button" class="btn btn-danger float-right mb-3">Delete Account</button>
-
-
+            <p>Total: {{ server.currency }}{{ a.account_balance }}</p>
+            <a href="/delete_account?account_id={{ a.id }}" class="btn btn-danger float-right mb-3">Delete Account</a>
         </div>
-        <div class="col border border-light mx-2">
-            <h3>LiquorAce Account</h3>
-            <hr>
-            <p>Total: $1,241</p>
-            <button type="button" class="btn btn-danger float-right mb-3">Delete Account</button>
-
-        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
