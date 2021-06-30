@@ -3,7 +3,7 @@ from werkzeug.utils import redirect
 
 from . import personal
 from .. import db
-from ..models import User, Account, Property, Server
+from ..models import User, Account, Property, Server, TransactionLog
 
 API_ENDPOINT = 'https://discord.com/api/v8'
 CLIENT_ID = '767749360586326026'
@@ -61,7 +61,7 @@ def pers_dashboard(guild):
         user = inserting_user
 
     main_account = Account.query.filter_by(id=user.user_main_account).first()
-    properties = Property.query.filter_by(property_guild=guild, property_owner_id=session['userid'])
+    properties = Property.query.filter_by(property_guild=guild, property_owner_id=user.id).all()
     accounts = Account.query.filter_by(account_user_id=session['userid'], account_guild_id=guild)
     server = Server.query.filter_by(guild_id=guild).first()
     networth = 0
@@ -81,4 +81,5 @@ def pers_dashboard(guild):
 
     return render_template('civ_dashboard.html', user=user if user is not None else None,
                            logged_in=session['logged_in'], main_account=main_account, properties=properties,
-                           accounts=accounts, networth=networth, server=server)
+                           accounts=accounts, networth=networth, server=server,
+                           transactions=TransactionLog.query.filter_by(user_id=user.id))

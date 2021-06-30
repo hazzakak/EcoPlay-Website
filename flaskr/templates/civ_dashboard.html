@@ -6,7 +6,8 @@
 {% block content %}
 
 
-<div id="createAccountModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="createAccountModal" role="dialog"
+     tabindex="-1">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -23,7 +24,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" form="accountCreate" value="Create Account">
+                <input class="btn btn-primary" form="accountCreate" type="submit" value="Create Account">
                 <button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -47,7 +48,7 @@
                 <span class="badge bg-primary rounded-pill">{{ server.currency }}{{ p.property_value }}</span>
             </li>
             {% endfor %}
-            {% if properties.count() == 0 %}
+            {% if properties|length == 0 %}
             <li class="list-group-item d-flex justify-content-between align-items-start bg-warning">
                 <div class="ms-2 me-auto">
                     <div class="fw-bold text-light">You do not own any properties ;(</div>
@@ -73,5 +74,31 @@
         </div>
         {% endfor %}
     </div>
+    <hr>
+    <h4 class="mb-5">Transaction Logs</h4>
+    <table class="table table-striped table-dark">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Log</th>
+            <th scope="col">Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for t in transactions %}
+        <tr>
+            <th scope="row">{{ t.id }}</th>
+            <td>{{ t.description }}</td>
+            <td>{{ t.time }}</td>
+        </tr>
+        {% endfor %}
+
+        {% if transactions.count() == 0 %}
+        <tr class="table-danger">
+            <th colspan="5">No transaction logs</th>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

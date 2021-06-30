@@ -3,12 +3,34 @@ from werkzeug.utils import redirect
 
 from . import admin
 from .. import db
-from ..models import User, Account, Server, Property
+from ..models import User, Account, Server, Property, TransactionLog
 
 API_ENDPOINT = 'https://discord.com/api/v8'
 CLIENT_ID = '767749360586326026'
 CLIENT_SECRET = 'B8JBIE949Ak5DZZ-6DsmD4mG20Rf1U_S'
 REDIRECT_URI = 'http://localhost:5000/discord/auth'
+
+
+@admin.route('/delete_property', methods=['GET', 'POST'])
+def delete_account():
+    code = request.args.get('property_id')
+    property = Property.query.filter_by(id=int(code)).first()
+    isAdmin = False
+
+    for g in session['guilds']:
+        if g[2] and int(property.property_guild) == int(g[1]):
+            isAdmin = True
+            break
+        else:
+            continue
+
+    if not isAdmin:
+        flash('Naughty! You are not allowed to delete this property! *tuts* ', 'danger')
+        return redirect(url_for("admin.admin_dashboard"))
+
+    db.session.delete(property)
+    db.session.commit()
+    return redirect(url_for("admin.properties_dashboard", guild=property.property_guild))
 
 
 @admin.route('/admin-dashboard', defaults={'guild': None}, methods=['GET', 'POST'])
@@ -72,6 +94,7 @@ def admin_dashboard(guild):
     return render_template('admin_dashboard.html', user=user if user is not None else None,
                            logged_in=session['logged_in'], server=server)
 
+
 @admin.route('/properties', defaults={'guild': None}, methods=['GET', 'POST'])
 @admin.route('/properties/<guild>', methods=['GET', 'POST'])
 def properties_dashboard(guild):
@@ -118,8 +141,30 @@ def properties_dashboard(guild):
     server = Server.query.filter_by(guild_id=guild).first()
     properties = Property.query.filter_by(property_guild=guild)
 
-    for p in properties:
-        print(p.property_owner.user_name)
+    if request.method == 'POST':
+        property_name = request.form.get('property_name')
+        property_value = request.form.get('property_value')
+        property_owner = request.form.get('property_owner')
+
+        property_exists = Property.query.filter_by(property_name=property_name).first()
+        if property_exists:
+            flash("A property already exists with this name.", 'danger')
+            return redirect(url_for("admin.properties_dashboard", guild=guild))
+
+        property_user = User.query.filter_by(user_id=property_owner).first()
+
+        new_property = Property(property_name=property_name, property_value=property_value,
+                                property_owner_id=property_user.id, property_guild=guild)
+        db.session.add(new_property)
+        db.session.commit()
+
+        trans = TransactionLog(user_id=new_property.property_owner_id,
+                               description=f"Property transferred. Value: {server.currency}{new_property.property_value}")
+        db.session.add(trans)
+        db.session.commit()
+
+        flash('You have created a property.', 'success')
 
     return render_template('admin_properties.html', user=user if user is not None else None,
-                           logged_in=session['logged_in'], server=server, properties=properties)
+                           logged_in=session['logged_in'], server=server, properties=properties,
+                           users=User.query.filter_by(user_associated_guild=guild))

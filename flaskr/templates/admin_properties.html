@@ -5,6 +5,50 @@
 {% block header %} mb-5{% endblock %}
 {% block content %}
 
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="createPropertyModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark">Create a Property</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form id="propertyCreate" method="POST">
+                    <input name="property_id" type="hidden" value="">
+                    <div class="form-group">
+                        <label class="text-dark" for="inputPropertyName">Property Name</label>
+                        <input aria-describedby="accountNameHelp" class="form-control" id="inputPropertyName"
+                               name="property_name"
+                               placeholder="Enter account name" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-dark" for="inputPropertyValue">Property Value</label>
+                        <div class="dollar"><input aria-describedby="accountNameHelp" class="form-control"
+                                                   id="inputPropertyValue"
+                                                   name="property_value"
+                                                   placeholder="Enter account value" type="number"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-dark" for="inputUserID">Property Owner</label>
+                        <input class="form-control" id="exampleDataList" list="inputUserID" name="property_owner"
+                               placeholder="Type to search...">
+                        <datalist id="inputUserID">
+                            {% for u in users %}
+                            <option value="{{ u.user_id }}">{{ u.user_name }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-primary" form="propertyCreate" type="submit" value="Create Property">
+                <button class="btn btn-secondary text-light" data-bs-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h1 class="text-center">Admin Dashboard</h1>
 <div class="container">
     <div class="container">
@@ -12,7 +56,7 @@
         <hr>
         <div class="row">
             <div class="col-xs-4">
-                <a href="" class="btn btn-primary">Settings</a>
+                <a class="btn btn-primary" href="/admin-dashboard/{{server.guild_id}}">Settings</a>
                 <a href="" class="btn btn-primary">Bank Accounts</a>
             </div>
         </div>
@@ -21,6 +65,10 @@
             <div class="card-body tab-content">
                 <div class="tab-pane active" id="profile">
                     <h6>PROPERTIES</h6>
+                    <button class="btn btn-light float-right" data-bs-target="#createPropertyModal"
+                            data-bs-toggle="modal"
+                            type="button"><i class="bi bi-plus"></i>
+                    </button>
                     <hr>
                     <table class="table table-striped table-dark">
                         <thead>
@@ -47,7 +95,9 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" href="#">Edit</a>
-                                        <a class="dropdown-item" href="#">Delete</a>
+                                        <a class="dropdown-item"
+                                           href="/delete_property?property_id={{ p.id }}">Delete Account</a>
+
                                     </div>
                                 </div>
                             </td>
@@ -66,4 +116,24 @@
         </div>
     </div>
 </div>
+
+<style>
+       .dollar{
+            position: relative;
+            color: black;
+            }
+       .dollar input{
+            padding-left:15px;
+            }
+       .dollar:before {
+            position: absolute;
+            content:"{{ server.currency }}";
+            left:5px;
+            top:6px;
+            }
+
+
+
+
+</style>
 {% endblock %}
