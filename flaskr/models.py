@@ -31,33 +31,6 @@ class Account(db.Model):
     def __repr__(self):
         return '<Account %r>' % self.id
 
-    def __init__(self, account_name, account_balance):
-        self.account_name = account_name
-        self.account_balance = account_balance
-
-    def delete_account(self):
-        return
-
-    def create_account(self):
-        return
-
-    def set_default_account(self):
-        return
-
-    @classmethod
-    def deposit(cls, amount, **kw):
-        obj = cls(**kw)
-        obj.account_balance += amount
-        db.session.add(obj)
-        db.session.commit()
-
-    @classmethod
-    def withdraw(cls, amount, **kw):
-        obj = cls(**kw)
-        obj.account_balance += amount
-        db.session.add(obj)
-        db.session.commit()
-
 
 class Property(db.Model):
     id = db.Column(db.Integer, primary_key=True)
