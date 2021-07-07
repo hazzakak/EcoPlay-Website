@@ -8,7 +8,7 @@ from ..models import User, Server
 API_ENDPOINT = 'https://discord.com/api/v8'
 CLIENT_ID = '767749360586326026'
 CLIENT_SECRET = 'B8JBIE949Ak5DZZ-6DsmD4mG20Rf1U_S'
-REDIRECT_URI = 'http://localhost:5000/discord/auth'
+REDIRECT_URI = 'https://ecoplay.xyz/discord/auth'
 
 
 @login.route('/login', methods=['GET', 'POST'])
