@@ -142,28 +142,46 @@ def properties_dashboard(guild):
     properties = Property.query.filter_by(property_guild=guild)
 
     if request.method == 'POST':
-        property_name = request.form.get('property_name')
-        property_value = request.form.get('property_value')
-        property_owner = request.form.get('property_owner')
+        if 'edit_property_name' in request.form:
+            property_id = request.form.get('edit_property_id')
+            property_name = request.form.get('edit_property_name')
+            property_value = request.form.get('edit_property_value')
+            property_owner = request.form.get('edit_property_owner')
 
-        property_exists = Property.query.filter_by(property_name=property_name).first()
-        if property_exists:
-            flash("A property already exists with this name.", 'danger')
+            property = Property.query.filter_by(id=property_id).first()
+
+            property.property_name = property_name
+            property.property_value = property_value
+            property.property_owner_id = int(property_owner)
+
+            db.session.commit()
+            flash('You have edited the property.', 'success')
             return redirect(url_for("admin.properties_dashboard", guild=guild))
 
-        property_user = User.query.filter_by(user_id=property_owner).first()
+        if 'property_name' in request.form:
+            property_name = request.form.get('property_name')
+            property_value = request.form.get('property_value')
+            property_owner = request.form.get('property_owner')
 
-        new_property = Property(property_name=property_name, property_value=property_value,
-                                property_owner_id=property_user.id, property_guild=guild)
-        db.session.add(new_property)
-        db.session.commit()
+            property_exists = Property.query.filter_by(property_name=property_name).first()
+            if property_exists:
+                flash("A property already exists with this name.", 'danger')
+                return redirect(url_for("admin.properties_dashboard", guild=guild))
 
-        trans = TransactionLog(user_id=new_property.property_owner_id,
-                               description=f"Property transferred. Value: {server.currency}{new_property.property_value}")
-        db.session.add(trans)
-        db.session.commit()
+            property_user = User.query.filter_by(user_id=property_owner).first()
 
-        flash('You have created a property.', 'success')
+            new_property = Property(property_name=property_name, property_value=property_value,
+                                    property_owner_id=property_user.user_id if property_user else None,
+                                    property_guild=guild)
+            db.session.add(new_property)
+            db.session.commit()
+
+            trans = TransactionLog(user_id=new_property.property_owner_id,
+                                   description=f"Property transferred. Value: {server.currency}{new_property.property_value}")
+            db.session.add(trans)
+            db.session.commit()
+
+            flash('You have created a property.', 'success')
 
     return render_template('admin_properties.html', user=user if user is not None else None,
                            logged_in=session['logged_in'], server=server, properties=properties,

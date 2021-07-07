@@ -11,8 +11,8 @@ class User(db.Model):
     user_associated_guild = db.Column(db.Integer)
     user_main_account = db.Column(db.Integer)
     user_accounts = db.Column(db.String)
-    user_name = db.Column(db.String(120), unique=True, nullable=False)
-    user_email = db.Column(db.String(120), unique=True, nullable=False)
+    user_name = db.Column(db.String(120))
+    user_email = db.Column(db.String(120))
 
     def __repr__(self):
         return '<User %r>' % self.user_name
@@ -36,7 +36,7 @@ class Property(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     property_name = db.Column(db.Integer, nullable=False)
     property_value = db.Column(db.Integer, server_default='0')
-    property_owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    property_owner_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     property_owner = db.relationship('User', backref=backref('user', uselist=False))
     property_guild = db.Column(db.Integer, nullable=False)
 

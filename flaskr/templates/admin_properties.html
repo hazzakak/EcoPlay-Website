@@ -49,6 +49,55 @@
     </div>
 </div>
 
+
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="editPropertyModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark">Edit Property</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form id="propertyEdit" method="POST">
+                    <div class="form-group">
+                        <input class="form-control" id="inputEditPropertyID" name="edit_property_id" readonly
+                               type="number" value="">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-dark" for="inputEditPropertyName">Property Name</label>
+                        <input aria-describedby="accountNameHelp" class="form-control" id="inputEditPropertyName"
+                               name="edit_property_name"
+                               placeholder="Enter account name" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-dark" for="inputEditPropertyValue">Property Value</label>
+                        <div class="dollar"><input aria-describedby="accountNameHelp" class="form-control"
+                                                   id="inputEditPropertyValue"
+                                                   name="edit_property_value"
+                                                   placeholder="Enter account value" type="number"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-dark" for="inputUserID">Property Owner</label>
+                        <input class="form-control" id="exampleEditDataList" list="inputEditUserID"
+                               name="edit_property_owner"
+                               placeholder="Type to search...">
+                        <datalist id="inputEditUserID">
+                            {% for u in users %}
+                            <option value="{{ u.user_id }}">{{ u.user_name }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-primary" form="propertyEdit" type="submit" value="Edit Property">
+                <button class="btn btn-secondary text-light" data-bs-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h1 class="text-center">Admin Dashboard</h1>
 <div class="container">
     <div class="container">
@@ -64,11 +113,12 @@
         <div class="container">
             <div class="card-body tab-content">
                 <div class="tab-pane active" id="profile">
-                    <h6>PROPERTIES</h6>
-                    <button class="btn btn-light float-right" data-bs-target="#createPropertyModal"
-                            data-bs-toggle="modal"
-                            type="button"><i class="bi bi-plus"></i>
-                    </button>
+                    <h4>PROPERTIES
+                        <button class="btn btn-light float-right" data-bs-target="#createPropertyModal"
+                                data-bs-toggle="modal"
+                                type="button"><i class="bi bi-plus"></i>
+                        </button>
+                    </h4>
                     <hr>
                     <table class="table table-striped table-dark">
                         <thead>
@@ -94,9 +144,11 @@
                                             aria-expanded="false">
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#">Edit</a>
+                                        <a class="dropdown-item" data-bs-target="#editPropertyModal"
+                                           data-bs-toggle="modal" href="#"
+                                           onclick="document.getElementById('inputEditPropertyName').value='{{ p.property_name }}';document.getElementById('inputEditPropertyValue').value='{{ p.property_value }}';document.getElementById('exampleEditDataList').value='{{ p.property_owner.user_id }}';document.getElementById('exampleEditDataList').innerHTML='{{ p.property_owner.user_name }}';document.getElementById('inputEditPropertyID').value='{{ p.id }}';">Edit</a>
                                         <a class="dropdown-item"
-                                           href="/delete_property?property_id={{ p.id }}">Delete Account</a>
+                                           href="/delete_property?property_id={{ p.id }}">Delete Property</a>
 
                                     </div>
                                 </div>
@@ -131,8 +183,6 @@
             left:5px;
             top:6px;
             }
-
-
 
 
 </style>
