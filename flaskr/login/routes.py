@@ -3,7 +3,6 @@ from flask import request, render_template, flash, session, url_for
 from werkzeug.utils import redirect
 
 from . import login
-from .. import db
 from ..models import User, Server
 
 API_ENDPOINT = 'https://discord.com/api/v8'

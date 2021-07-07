@@ -5,6 +5,37 @@
 {% block header %} mb-5{% endblock %}
 {% block content %}
 
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="editAccountModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark">Set Account Amount</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form id="accountSet" method="POST">
+                    <div class="form-group">
+                        <input name="edit_property_id" id="inputEditPropertyID" type="number" class="form-control"
+                               readonly value="">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-dark" for="inputEditPropertyValue">Account Balance</label>
+                        <div class="dollar"><input aria-describedby="accountNameHelp" class="form-control"
+                                                   id="inputEditPropertyValue"
+                                                   name="account_value"
+                                                   placeholder="Enter account value" type="number"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-primary" form="accountSet" type="submit" value="Update Balance">
+                <button class="btn btn-secondary text-light" data-bs-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h1 class="text-center">Admin Dashboard</h1>
 <div class="container">
     <div class="container ">
@@ -12,52 +43,96 @@
         <hr>
         <div class="row">
             <div class="col-xs-4">
-                <a href="" class="btn btn-primary">Settings</a>
-                <a href="" class="btn btn-primary">Properties</a>
+                <a class="btn btn-primary" href="/admin-dashboard/{{server.guild_id}}">Settings</a>
+                <a class="btn btn-primary" href="/properties/{{server.guild_id}}">Properties</a>
+                <a href="/admin-tasks/{{ server.guild_id }}" class="btn btn-primary">Tasks</a>
             </div>
         </div>
         <hr>
         <div class="container">
             <div class="card-body tab-content">
                 <div class="tab-pane active" id="profile">
-                    <h6>SERVER SETTINGS</h6>
+                    <h6>BANK ACCOUNTS</h6>
                     <hr>
-                    <form id="serverSettings" method="POST">
-                        <div class="form-group">
-                            <label for="maxAccounts">Max Accounts</label>
-                            <input type="number" name="max_accounts" class="form-control" id="maxAccounts"
-                                   aria-describedby="maxAccountsHelp" value="{{ server.max_accounts }}">
-                            <small id="maxAccountsHelp" class="form-text text-muted">How many accounts a user can
-                                open.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="bankerRole">Banker Role</label>
-                            <input type="number" name="banker_role" class="form-control" id="bankerRole"
-                                   aria-describedby="bankerRoleHelp" value="{{ server.banker_role }}">
-                            <small id="bankerRoleHelp" class="form-text text-muted">The ID of the role of which Bankers
-                                have, for functions such as deleting accounts, adding money, and resetting
-                                users.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="currency">Currency</label>
-                            <input type="text" name="currency" class="form-control" id="currency"
-                                   aria-describedby="currencyHelp" value="{{ server.currency }}">
-                            <small id="currencyHelp" class="form-text text-muted">The currency form that will show in
-                                front of all currency numbers. (ex. £)</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="startingAmount">Starting Amount</label>
-                            <input type="number" name="starting_amount" class="form-control" id="startingAmount"
-                                   aria-describedby="startingAmountHelp" value="{{ server.starting_amount }}">
-                            <small id="startingAmountHelp" class="form-text text-muted">The amount of money a new user
-                                will start with.</small>
-                        </div>
-                        <input type="submit" class="btn btn-primary" value="Update Settings" form="serverSettings">
-                        <button type="reset" class="btn btn-light">Reset Changes</button>
-                    </form>
+                    <input type="text" class="form-control" id="myInput" onkeyup="myFunction()" placeholder="Search..">
+                    <table class="table table-dark table-striped border border-dark rounded" style="position: relative;height: 400px;overflow: auto;display:block;">
+                        <thead>
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col">Account Owner</th>
+                              <th scope="col">Account Balance</th>
+                              <th scope="col">Options</th>
+                            </tr>
+                          </thead>
+                          <tbody id="myTable">
+                            {% for a in accounts %}
+                            <tr>
+                              <td scope="row">{{ a.id }}</td>
+                              <td>{{ a.account_user.user_name }}</td>
+                              <td>{{ server.currency }}{{ a.account_balance }}</td>
+                              <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" data-bs-target="#editAccountModal"
+                                           data-bs-toggle="modal" href="#"
+                                           onclick="document.getElementById('inputEditPropertyID').value='{{ a.id }}';">Edit</a>
+                                        <a class="dropdown-item"
+                                           href="/admin/delete_account?account_id={{ a.id }}">Delete Property</a>
+
+                                    </div>
+                                </div>
+                            </td>
+                            </tr>
+                            {% endfor %}
+                      </table>
+                      
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .dollar{
+         position: relative;
+         color: black;
+         }
+    .dollar input{
+         padding-left:15px;
+         }
+    .dollar:before {
+         position: absolute;
+         content:"{{ server.currency }}";
+         left:5px;
+         top:6px;
+         }
+</style>
+
+<script>
+    function myFunction() {
+      // Declare variables
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+    
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+    </script>
 {% endblock %}

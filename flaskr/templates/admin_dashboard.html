@@ -12,8 +12,9 @@
         <hr>
         <div class="row">
             <div class="col-xs-4">
-                <a href="/properties" class="btn btn-primary">Properties</a>
-                <a href="" class="btn btn-primary">Bank Accounts</a>
+                <a class="btn btn-primary" href="/properties/{{server.guild_id}}">Properties</a>
+                <a href="/bank-accounts/{{ server.guild_id }}" class="btn btn-primary">Bank Accounts</a>
+                <a href="/admin-tasks/{{ server.guild_id }}" class="btn btn-primary">Tasks</a>
             </div>
         </div>
         <hr>
@@ -47,8 +48,8 @@
                         </div>
                         <div class="form-group">
                             <label for="startingAmount">Starting Amount</label>
-                            <input type="number" name="starting_amount" class="form-control" id="startingAmount"
-                                   aria-describedby="startingAmountHelp" value="{{ server.starting_amount }}">
+                            <div class="dollar"><input type="number" name="starting_amount" class="form-control" id="startingAmount"
+                                                       aria-describedby="startingAmountHelp" value="{{ server.starting_amount }}"></div>
                             <small id="startingAmountHelp" class="form-text text-muted">The amount of money a new user
                                 will start with.</small>
                         </div>
@@ -60,4 +61,25 @@
         </div>
     </div>
 </div>
+
+<style>
+       .dollar{
+            position: relative;
+            color: black;
+            }
+       .dollar input{
+            padding-left:15px;
+            }
+       .dollar:before {
+            position: absolute;
+            content:"{{ server.currency }}";
+            left:5px;
+            top:6px;
+            }
+
+
+
+
+
+</style>
 {% endblock %}
