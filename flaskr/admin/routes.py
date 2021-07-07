@@ -171,8 +171,7 @@ def properties_dashboard(guild):
             property_user = User.query.filter_by(user_id=property_owner).first()
 
             new_property = Property(property_name=property_name, property_value=property_value,
-                                    property_owner_id=property_user.user_id if property_user else None,
-                                    property_guild=guild)
+                                    property_owner_id=property_user.user_id if property_user else None, property_guild=guild)
             db.session.add(new_property)
             db.session.commit()
 
