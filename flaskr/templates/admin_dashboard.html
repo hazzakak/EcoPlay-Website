@@ -47,8 +47,9 @@
                         </div>
                         <div class="form-group">
                             <label for="startingAmount">Starting Amount</label>
-                            <input type="number" name="starting_amount" class="form-control" id="startingAmount"
-                                   aria-describedby="startingAmountHelp" value="{{ server.starting_amount }}">
+                            <div class="dollar"><input aria-describedby="startingAmountHelp" class="form-control"
+                                                       id="startingAmount" name="starting_amount"
+                                                       type="number" value="{{ server.starting_amount }}"></div>
                             <small id="startingAmountHelp" class="form-text text-muted">The amount of money a new user
                                 will start with.</small>
                         </div>
@@ -60,4 +61,26 @@
         </div>
     </div>
 </div>
+
+<style>
+       .dollar{
+            position: relative;
+            color: black;
+            }
+       .dollar input{
+            padding-left:15px;
+            }
+       .dollar:before {
+            position: absolute;
+            content:"{{ server.currency }}";
+            left:5px;
+            top:6px;
+            }
+
+
+
+
+
+
+</style>
 {% endblock %}
