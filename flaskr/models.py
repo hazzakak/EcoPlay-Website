@@ -23,7 +23,8 @@ class User(db.Model):
 
 class Account(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    account_user_id = db.Column(db.Integer, nullable=False)
+    account_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+    account_user = db.relationship('User', backref=backref('account_owner', uselist=False))
     account_guild_id = db.Column(db.Integer, nullable=False)
     account_name = db.Column(db.String(120), server_default='Main Account')
     account_balance = db.Column(db.Integer, server_default='0')

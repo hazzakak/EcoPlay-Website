@@ -10,8 +10,8 @@ from ..models import Server, User, Property, Task, Account
 ''' example
 @api.route('/api/v1.0/server/create_server', methods=['GET'])
 def create_server():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         return
@@ -39,13 +39,18 @@ def create_server():
 
 @api.route('/api/v1.0/server/create_server', methods=['GET'])
 def create_server():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+
+    print(1)
+
+    print(key=="mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP", key)
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         new_server = Server(guild_id=guild_id)
         db.session.add(new_server)
         db.session.commit()
+        print(1)
 
         return_json = {'response': 200, 'id': new_server.id}
         return jsonify(return_json)
@@ -56,8 +61,8 @@ def create_server():
 
 @api.route('/api/v1.0/server/get_starting_amount', methods=['GET'])
 def get_starting_amount():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         server = Server.query.filter_by(guild_id=guild_id).first()
@@ -71,14 +76,18 @@ def get_starting_amount():
 
 @api.route('/api/v1.0/server/get_banker_role', methods=['GET'])
 def get_banker_role():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
-        server = Server.query.filter_by(guild_id=guild_id).first()
+        server = Server.query.filter_by(guild_id=int(guild_id)).first()
 
-        return_json = {'response': 200, 'banker_role': server.banker_role}
-        return jsonify(return_json)
+        try:
+            return_json = {'response': 200, 'banker_role': server.banker_role}
+            return jsonify(return_json)
+        except:
+            return_json = {'response': 401}
+            return jsonify(return_json)
     else:
         return_json = {'response': 401}
         return jsonify(return_json)
@@ -86,8 +95,8 @@ def get_banker_role():
 
 @api.route('/api/v1.0/server/get_max_accounts', methods=['GET'])
 def get_max_accounts():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         server = Server.query.filter_by(guild_id=guild_id).first()
@@ -101,9 +110,9 @@ def get_max_accounts():
 
 @api.route('/api/v1.0/server/set_starting_amount', methods=['GET'])
 def set_starting_amount():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
-    new_value = request.values.get('new_value')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    new_value = request.form.get('new_value')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         server = Server.query.filter_by(guild_id=guild_id).first()
@@ -119,9 +128,9 @@ def set_starting_amount():
 
 @api.route('/api/v1.0/server/set_banker_role', methods=['GET'])
 def set_banker_role():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
-    new_value = request.values.get('new_value')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    new_value = request.form.get('new_value')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         server = Server.query.filter_by(guild_id=guild_id).first()
@@ -137,9 +146,9 @@ def set_banker_role():
 
 @api.route('/api/v1.0/server/set_max_accounts', methods=['GET'])
 def set_max_accounts():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
-    new_value = request.values.get('new_value')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    new_value = request.form.get('new_value')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         server = Server.query.filter_by(guild_id=guild_id).first()
@@ -155,10 +164,10 @@ def set_max_accounts():
 
 @api.route('/api/v1.0/server/create_user', methods=['GET'])
 def create_user():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
-    user_id = request.values.get('user_id')
-    user_name = request.values.get('user_name')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    user_id = request.form.get('user_id')
+    user_name = request.form.get('user_name')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         exists = User.query.filter_by(user_id=user_id, user_associated_guild=guild_id).first()
@@ -202,10 +211,10 @@ def create_user():
 
 @api.route('/api/v1.0/property/create_property', methods=['GET'])
 def create_property():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
-    name = request.values.get('name')
-    value = request.values.get('value')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    name = request.form.get('name')
+    value = request.form.get('value')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         exists = Property.query.filter_by(property_name=name).first()
@@ -225,9 +234,9 @@ def create_property():
 
 @api.route('/api/v1.0/property/get_users_properties', methods=['GET'])
 def get_users_properties():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
-    user_id = request.values.get('user_id')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    user_id = request.form.get('user_id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         properties = Property.query.filter_by(property_owner_id=user_id, property_guild=guild_id)
@@ -245,8 +254,8 @@ def get_users_properties():
 
 @api.route('/api/v1.0/property/get_all_properties', methods=['GET'])
 def get_all_properties():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         properties = Property.query.filter_by(property_guild=guild_id)
@@ -264,8 +273,8 @@ def get_all_properties():
 
 @api.route('/api/v1.0/property/get_all_unowned_properties', methods=['GET'])
 def get_all_unowned_properties():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         properties = Property.query.filter_by(property_guild=guild_id, property_owner_id=None)
@@ -283,9 +292,9 @@ def get_all_unowned_properties():
 
 @api.route('/api/v1.0/property/get_property_name', methods=['GET'])
 def get_property_name():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
-    id = request.values.get('id')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    id = request.form.get('id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         property = Property.query.filter_by(property_guild=guild_id, id=id).first()
@@ -303,9 +312,9 @@ def get_property_name():
 
 @api.route('/api/v1.0/property/get_property_value', methods=['GET'])
 def get_property_value():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
-    name = request.values.get('name')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    name = request.form.get('name')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         property = Property.query.filter_by(property_guild=guild_id, property_name=name).first()
@@ -323,9 +332,9 @@ def get_property_value():
 
 @api.route('/api/v1.0/property/get_property_owner', methods=['GET'])
 def get_property_owner():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
-    name = request.values.get('name')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    name = request.form.get('name')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         property = Property.query.filter_by(property_guild=guild_id, property_name=name).first()
@@ -339,9 +348,9 @@ def get_property_owner():
 
 @api.route('/api/v1.0/property/get_property_exists', methods=['GET'])
 def get_property_exists():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
-    name = request.values.get('name')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    name = request.form.get('name')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         property = Property.query.filter_by(property_guild=guild_id, property_name=name).first()
@@ -355,9 +364,9 @@ def get_property_exists():
 
 @api.route('/api/v1.0/property/set_property_name', methods=['GET'])
 def set_property_name():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
-    new_value = request.values.get('new_value')
+    key = request.form.get('api_key')
+    id = request.form.get('id')
+    new_value = request.form.get('new_value')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         property = Property.query.filter_by(id=id).first()
@@ -373,10 +382,10 @@ def set_property_name():
 
 @api.route('/api/v1.0/property/set_property_value', methods=['GET'])
 def set_property_value():
-    key = request.values.get('api_key')
-    name = request.values.get('name')
-    guild = request.values.get('guild')
-    new_value = request.values.get('new_value')
+    key = request.form.get('api_key')
+    name = request.form.get('name')
+    guild = request.form.get('guild')
+    new_value = request.form.get('new_value')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         property = Property.query.filter_by(property_name=name, property_guild=guild).first()
@@ -392,10 +401,10 @@ def set_property_value():
 
 @api.route('/api/v1.0/property/set_property_owner', methods=['GET'])
 def set_property_owner():
-    key = request.values.get('api_key')
-    name = request.values.get('name')
-    guild = request.values.get('guild')
-    new_value = request.values.get('new_value')
+    key = request.form.get('api_key')
+    name = request.form.get('name')
+    guild = request.form.get('guild')
+    new_value = request.form.get('new_value')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         property = Property.query.filter_by(property_name=name, property_guild=guild).first()
@@ -411,9 +420,9 @@ def set_property_owner():
 
 @api.route('/api/v1.0/property/delete_property', methods=['GET'])
 def delete_property():
-    key = request.values.get('api_key')
-    guild = request.values.get('guild')
-    name = request.values.get('name')
+    key = request.form.get('api_key')
+    guild = request.form.get('guild')
+    name = request.form.get('name')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         property = Property.query.filter_by(property_guild=guild, property_name=name).first()
@@ -445,8 +454,8 @@ def delete_property():
 
 @api.route('/api/v1.0/task/get_tasks', methods=['GET'])
 def get_tasks():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         tasks = Task.query.filter_by(guild_id=guild_id)
@@ -464,7 +473,7 @@ def get_tasks():
 
 @api.route('/api/v1.0/task/get_all_tasks_today', methods=['GET'])
 def get_all_tasks_today():
-    key = request.values.get('api_key')
+    key = request.form.get('api_key')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         tasks = Task.query.filter_by(next_due=datetime.datetime.today().date())
@@ -482,8 +491,8 @@ def get_all_tasks_today():
 
 @api.route('/api/v1.0/task/get_task', methods=['GET'])
 def get_task():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
+    key = request.form.get('api_key')
+    id = request.form.get('id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         task = Task.query.filter_by(id=id).first()
@@ -499,8 +508,8 @@ def get_task():
 
 @api.route('/api/v1.0/task/get_task_type', methods=['GET'])
 def get_task_type():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
+    key = request.form.get('api_key')
+    id = request.form.get('id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         task = Task.query.filter_by(id=id).first()
@@ -514,8 +523,8 @@ def get_task_type():
 
 @api.route('/api/v1.0/task/get_task_target_id', methods=['GET'])
 def get_task_target_id():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
+    key = request.form.get('api_key')
+    id = request.form.get('id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         task = Task.query.filter_by(id=id).first()
@@ -529,8 +538,8 @@ def get_task_target_id():
 
 @api.route('/api/v1.0/task/set_next_due', methods=['GET'])
 def set_next_due():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
+    key = request.form.get('api_key')
+    id = request.form.get('id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         task = Task.query.filter_by(id=id).first()
@@ -551,8 +560,8 @@ def set_next_due():
 
 @api.route('/api/v1.0/task/get_task_frequency', methods=['GET'])
 def get_task_frequency():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
+    key = request.form.get('api_key')
+    id = request.form.get('id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         task = Task.query.filter_by(id=id).first()
@@ -566,12 +575,12 @@ def get_task_frequency():
 
 @api.route('/api/v1.0/task/create_task', methods=['GET'])
 def create_task():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
-    task_type = request.values.get('task_type')
-    target_id = request.values.get('target_id')
-    amount = request.values.get('amount')
-    frequency = request.values.get('frequency')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    task_type = request.form.get('task_type')
+    target_id = request.form.get('target_id')
+    amount = request.form.get('amount')
+    frequency = request.form.get('frequency')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         new_task = Task(guild_id=guild_id, type=task_type, target_id=target_id, amount=amount, frequency=frequency)
@@ -603,11 +612,11 @@ def create_task():
 
 @api.route('/api/v1.0/account/create_account', methods=['GET'])
 def create_account():
-    key = request.values.get('api_key')
-    guild_id = request.values.get('guild_id')
-    user_id = request.values.get('user_id')
-    new = request.values.get('new')
-    name = request.values.get('name')
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    user_id = request.form.get('user_id')
+    new = request.form.get('new')
+    name = request.form.get('name')
 
     server = Server.query.filter_by(guild_id=guild_id).first()
     accounts = Account.query.filter_by(account_user_id=user_id, account_guild_id=guild_id)
@@ -631,8 +640,8 @@ def create_account():
 
 @api.route('/api/v1.0/account/get_account', methods=['GET'])
 def get_account():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
+    key = request.form.get('api_key')
+    id = request.form.get('id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         account = Account.query.filter_by(id=id).first()
@@ -649,9 +658,9 @@ def get_account():
 
 @api.route('/api/v1.0/account/get_default_account', methods=['GET'])
 def get_default_account():
-    key = request.values.get('api_key')
-    user_id = request.values.get('user_id')
-    guild_id = request.values.get('guild_id')
+    key = request.form.get('api_key')
+    user_id = request.form.get('user_id')
+    guild_id = request.form.get('guild_id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         user = User.query.filter_by(user_id=user_id, user_associated_guild=guild_id).first()
@@ -677,10 +686,10 @@ def get_default_account():
 
 @api.route('/api/v1.0/account/set_default_account', methods=['GET'])
 def set_default_account():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
-    user_id = request.values.get('user_id')
-    guild = request.values.get('guild_id')
+    key = request.form.get('api_key')
+    id = request.form.get('id')
+    user_id = request.form.get('user_id')
+    guild = request.form.get('guild_id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         user = User.query.filter_by(user_id=user_id, user_associated_guild=guild).first()
@@ -696,9 +705,9 @@ def set_default_account():
 
 @api.route('/api/v1.0/account/get_accounts', methods=['GET'])
 def get_accounts():
-    key = request.values.get('api_key')
-    user_id = request.values.get('user_id')
-    guild_id = request.values.get('guild_id')
+    key = request.form.get('api_key')
+    user_id = request.form.get('user_id')
+    guild_id = request.form.get('guild_id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         accounts = Account.query.filter_by(account_user_id=user_id, account_guild_id=guild_id)
@@ -717,8 +726,8 @@ def get_accounts():
 
 @api.route('/api/v1.0/account/delete_account', methods=['GET'])
 def delete_account():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
+    key = request.form.get('api_key')
+    id = request.form.get('id')
     account = Account.query.filter_by(id=id).first()
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
@@ -740,8 +749,8 @@ def delete_account():
 
 @api.route('/api/v1.0/account/get_account_name', methods=['GET'])
 def get_account_name():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
+    key = request.form.get('api_key')
+    id = request.form.get('id')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         account = Account.query.filter_by(id=id).first()
@@ -755,9 +764,9 @@ def get_account_name():
 
 @api.route('/api/v1.0/account/set_account_name', methods=['GET'])
 def set_account_name():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
-    name = request.values.get('name')
+    key = request.form.get('api_key')
+    id = request.form.get('id')
+    name = request.form.get('name')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         account = Account.query.filter_by(id=id).first()
@@ -773,9 +782,9 @@ def set_account_name():
 
 @api.route('/api/v1.0/account/deposit', methods=['GET'])
 def deposit():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
-    amount = request.values.get('amount')
+    key = request.form.get('api_key')
+    id = request.form.get('id')
+    amount = request.form.get('amount')
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         account = Account.query.filter_by(id=id).first()
@@ -791,10 +800,10 @@ def deposit():
 
 @api.route('/api/v1.0/account/withdraw', methods=['GET'])
 def withdraw():
-    key = request.values.get('api_key')
-    id = request.values.get('id')
-    amount = request.values.get('amount')
-    cannot_negative = request.values.get('amount') if 'amount' in request.values else False
+    key = request.form.get('api_key')
+    id = request.form.get('id')
+    amount = request.form.get('amount')
+    cannot_negative = request.form.get('amount') if 'amount' in request.form else False
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         account = Account.query.filter_by(id=id).first()

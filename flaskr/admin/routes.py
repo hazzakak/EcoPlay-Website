@@ -12,7 +12,7 @@ REDIRECT_URI = 'http://localhost:5000/discord/auth'
 
 
 @admin.route('/delete_property', methods=['GET', 'POST'])
-def delete_account():
+def delete_property():
     code = request.args.get('property_id')
     property = Property.query.filter_by(id=int(code)).first()
     isAdmin = False
@@ -32,6 +32,37 @@ def delete_account():
     db.session.commit()
     return redirect(url_for("admin.properties_dashboard", guild=property.property_guild))
 
+
+@admin.route('/admin/delete_account', methods=['GET', 'POST'])
+def delete_account():
+    code = request.args.get('account_id')
+    account = Account.query.filter_by(id=int(code)).first()
+    server = Server.query.filter_by(guild_id=account.account_guild_id).first()
+    isAdmin = False
+    guild = account.account_guild_id
+
+    for g in session['guilds']:
+        if g[2] and int(account.account_guild_id) == int(g[1]):
+            isAdmin = True
+            break
+        else:
+            continue
+
+    if not isAdmin:
+        flash('Naughty! You are not allowed to delete this account! *tuts* ', 'danger')
+        return redirect(url_for("admin.admin_dashboard"))
+
+    if account.account_user.user_main_account == account.id:
+        new_account = Account(account_user_id=account.account_user.user_id, account_guild_id=server.guild_id, account_balance=server.starting_amount)
+        db.session.add(new_account)
+        db.session.commit()
+
+        account.account_user.user_main_account
+        db.session.commit()
+
+    db.session.delete(account)
+    db.session.commit()
+    return redirect(url_for("admin.accounts_dashboard", guild=guild))
 
 @admin.route('/admin-dashboard', defaults={'guild': None}, methods=['GET', 'POST'])
 @admin.route('/admin-dashboard/<guild>', methods=['GET', 'POST'])
@@ -185,3 +216,73 @@ def properties_dashboard(guild):
     return render_template('admin_properties.html', user=user if user is not None else None,
                            logged_in=session['logged_in'], server=server, properties=properties,
                            users=User.query.filter_by(user_associated_guild=guild))
+
+
+@admin.route('/bank-accounts', defaults={'guild': None}, methods=['GET', 'POST'])
+@admin.route('/bank-accounts/<guild>', methods=['GET', 'POST'])
+def accounts_dashboard(guild):
+    user = None
+    if not session['logged_in']:
+        return redirect(url_for("login.index"))
+    if not session['userid']:
+        return redirect(url_for("login.index"))
+
+    if not guild:
+        return render_template('choose_guild.html', user=user if user is not None else None, guilds=session['guilds'],
+                               logged_in=session['logged_in'])
+
+    isAdmin = False
+
+    for g in session['guilds']:
+        if g[2] and int(guild) == int(g[1]):
+            isAdmin = True
+            break
+        else:
+            continue
+
+    if not isAdmin:
+        flash("You're not an admin in this server.", 'danger')
+        return render_template('choose_guild.html', user=user if user is not None else None,
+                               guilds=session['guilds'],
+                               logged_in=session['logged_in'])
+
+    user_exists = User.query.filter_by(user_id=session['userid'], user_associated_guild=guild).first()
+    if user_exists:
+        user = user_exists
+    else:
+        inserting_account = Account(account_user_id=session['userid'], account_guild_id=guild)
+        db.session.add(inserting_account)
+        db.session.commit()
+
+        inserting_user = User(user_id=session['userid'], user_email=session['email'], user_name=session['name'],
+                              user_associated_guild=guild, user_main_account=inserting_account.id)
+        db.session.add(inserting_user)
+        db.session.commit()
+
+        user = inserting_user
+
+    server = Server.query.filter_by(guild_id=guild).first()
+    accounts = Account.query.filter_by(account_guild_id=guild)
+
+    if request.method == 'POST':
+        if 'account_value' in request.form:
+            account_value = request.form.get('account_value')
+            account_id = request.form.get('edit_property_id')
+
+            account = Account.query.filter_by(id=account_id).first()
+            if not account:
+                flash("That account does not exist.", 'danger')
+                return redirect(url_for("admin.accounts_dashboard", guild=guild))
+
+            account.account_balance = account_value
+            
+            print(account_value, account_id)
+
+            db.session.commit()
+
+            flash('Account balance has been updated.', 'success')
+
+    return render_template('admin_bank_accounts.html', user=user if user is not None else None,
+                           logged_in=session['logged_in'], server=server,
+                           users=User.query.filter_by(user_associated_guild=guild),
+                           accounts=accounts)
