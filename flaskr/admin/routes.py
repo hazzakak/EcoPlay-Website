@@ -1,9 +1,10 @@
 from flask import render_template, session, url_for, flash, request
 from werkzeug.utils import redirect
+import datetime, time
 
 from . import admin
 from .. import db
-from ..models import User, Account, Server, Property, TransactionLog
+from ..models import Task, User, Account, Server, Property, TransactionLog
 
 API_ENDPOINT = 'https://discord.com/api/v8'
 CLIENT_ID = '767749360586326026'
@@ -63,6 +64,31 @@ def delete_account():
     db.session.delete(account)
     db.session.commit()
     return redirect(url_for("admin.accounts_dashboard", guild=guild))
+
+
+@admin.route('/admin/delete-task', methods=['GET', 'POST'])
+def delete_task():
+    id = request.args.get('task_id')
+
+    task = Task.query.filter_by(id=int(id)).first()
+    isAdmin = False
+
+    for g in session['guilds']:
+        if g[2] and int(property.property_guild) == int(g[1]):
+            isAdmin = True
+            break
+        else:
+            continue
+
+    if not isAdmin:
+        flash('Naughty! You are not allowed to delete this task! *tuts* ', 'danger')
+        return redirect(url_for("index.index"))
+
+    db.session.delete(task)
+    db.session.commit()
+    return redirect(url_for("admin.tasks_dashboard", guild=task.guild_id))
+
+
 
 @admin.route('/admin-dashboard', defaults={'guild': None}, methods=['GET', 'POST'])
 @admin.route('/admin-dashboard/<guild>', methods=['GET', 'POST'])
@@ -286,3 +312,77 @@ def accounts_dashboard(guild):
                            logged_in=session['logged_in'], server=server,
                            users=User.query.filter_by(user_associated_guild=guild),
                            accounts=accounts)
+
+
+@admin.route('/admin-tasks', defaults={'guild': None}, methods=['GET', 'POST'])
+@admin.route('/admin-tasks/<guild>', methods=['GET', 'POST'])
+def tasks_dashboard(guild):
+    user = None
+    if not session['logged_in']:
+        return redirect(url_for("login.index"))
+    if not session['userid']:
+        return redirect(url_for("login.index"))
+
+    if not guild:
+        return render_template('choose_guild.html', user=user if user is not None else None, guilds=session['guilds'],
+                               logged_in=session['logged_in'])
+
+    isAdmin = False
+
+    for g in session['guilds']:
+        if g[2] and int(guild) == int(g[1]):
+            isAdmin = True
+            break
+        else:
+            continue
+
+    if not isAdmin:
+        flash("You're not an admin in this server.", 'danger')
+        return render_template('choose_guild.html', user=user if user is not None else None,
+                               guilds=session['guilds'],
+                               logged_in=session['logged_in'])
+
+    user_exists = User.query.filter_by(user_id=session['userid'], user_associated_guild=guild).first()
+    if user_exists:
+        user = user_exists
+    else:
+        inserting_account = Account(account_user_id=session['userid'], account_guild_id=guild)
+        db.session.add(inserting_account)
+        db.session.commit()
+
+        inserting_user = User(user_id=session['userid'], user_email=session['email'], user_name=session['name'],
+                              user_associated_guild=guild, user_main_account=inserting_account.id)
+        db.session.add(inserting_user)
+        db.session.commit()
+
+        user = inserting_user
+
+    server = Server.query.filter_by(guild_id=guild).first()
+    tasks = Task.query.filter_by(guild_id=guild)
+
+    if request.method == 'POST':
+        if 'task_type' in request.form:
+            task_type = request.form.get('task_type')
+            task_amount = request.form.get('task_amount')
+            target_id = request.form.get('target_id')
+            frequency = request.form.get('frequency')
+
+            print(frequency, time.time())
+            frequency_t = int(frequency) * 24 * 60 * 60
+            print(frequency_t)
+            now = time.time()
+            next = now + int(frequency_t)
+            print(next)
+            dt_object = datetime.datetime.fromtimestamp(next)
+
+            task = Task(type=task_type, target_id=target_id, amount=task_amount, frequency=frequency, guild_id=guild, next_due=dt_object.date())
+            
+            db.session.add(task)
+            db.session.commit()
+
+            flash('Account balance has been updated.', 'success')
+
+    return render_template('admin_task_management.html', user=user if user is not None else None,
+                           logged_in=session['logged_in'], server=server,
+                           users=User.query.filter_by(user_associated_guild=guild),
+                           tasks=tasks)

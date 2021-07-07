@@ -545,7 +545,7 @@ def set_next_due():
         task = Task.query.filter_by(id=id).first()
         frequency = task.frequency * 24 * 60 * 60
         now = time.time()
-        next_due = now + frequency
+        next_due = int(now) + int(frequency)
         dt_object = datetime.datetime.fromtimestamp(next_due)
 
         task.next_due = dt_object.date()
