@@ -74,6 +74,21 @@ def get_starting_amount():
         return jsonify(return_json)
 
 
+@api.route('/api/v1.0/server/get_currency', methods=['GET'])
+def get_currency():
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+
+    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+        server = Server.query.filter_by(guild_id=guild_id).first()
+
+        return_json = {'response': 200, 'currency': server.currency}
+        return jsonify(return_json)
+    else:
+        return_json = {'response': 401}
+        return jsonify(return_json)
+
+
 @api.route('/api/v1.0/server/get_banker_role', methods=['GET'])
 def get_banker_role():
     key = request.form.get('api_key')
@@ -117,6 +132,24 @@ def set_starting_amount():
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         server = Server.query.filter_by(guild_id=guild_id).first()
         server.starting_amount = new_value
+        db.session.commit()
+
+        return_json = {'response': 200}
+        return jsonify(return_json)
+    else:
+        return_json = {'response': 401}
+        return jsonify(return_json)
+
+
+@api.route('/api/v1.0/server/set_currency', methods=['GET'])
+def set_currency():
+    key = request.form.get('api_key')
+    guild_id = request.form.get('guild_id')
+    new_value = request.form.get('new_value')
+
+    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+        server = Server.query.filter_by(guild_id=guild_id).first()
+        server.currency = new_value
         db.session.commit()
 
         return_json = {'response': 200}
@@ -670,10 +703,15 @@ def get_default_account():
             db.session.add(new_user)
             db.session.add(new_account)
             db.session.commit()
+            print(1)
 
             account = Account.query.filter_by(id=new_account.id).first()
         else:
+            print(2)
+            print(user.user_main_account)
             account = Account.query.filter_by(id=user.user_main_account).first()
+
+        print(account)
         rtn_lst = [account.id, account.account_user_id, account.account_guild_id, account.account_name,
                    account.account_balance]
 
