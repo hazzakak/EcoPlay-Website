@@ -53,17 +53,19 @@
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class="{% block header %}{% endblock %}">
         <div>
-            <h3 class="float-md-start mb-0">EcoPlay</h3>
             <nav class="nav nav-masthead justify-content-center float-md-end">
-                <a class="nav-link {% block nav_home %}{% endblock %}" aria-current="page" href="/">Home</a>
-                <a class="nav-link {% block nav_docs %}{% endblock %}" href="/docs">Docs</a>
+                <a class="navbar-brand" href="#" style="padding-top:0;">
+                    <img src="{{ url_for('static', filename='logo.png') }}" height="50" alt="">
+                </a>
+                <a class="nav-link {% block nav_home %}{% endblock %}" style="margin-bottom:20px;" aria-current="page" href="/">Home</a>
+                <a class="nav-link {% block nav_docs %}{% endblock %}" style="margin-bottom:20px;" href="/docs">Docs</a>
                 {% if logged_in %}
-                <a class="nav-link {% block nav_personal_dash %}{% endblock %}" href="/personal-dashboard">Personal
+                <a class="nav-link {% block nav_personal_dash %}{% endblock %}" style="margin-bottom:20px;" href="/personal-dashboard">Personal
                     Dashboard</a>
-                <a class="nav-link {% block nav_admin_dash %}{% endblock %}" href="/admin-dashboard">Admin Dashboard</a>
-                <a class="nav-link text-danger" href="/logout">Logout</a>
+                <a class="nav-link {% block nav_admin_dash %}{% endblock %}" style="margin-bottom:20px;" href="/admin-dashboard">Admin Dashboard</a>
+                <a class="nav-link text-danger" style="margin-bottom:20px;" href="/logout">Logout</a>
                 {% else %}
-                <a class="nav-link {% block nav_login %}{% endblock %}" href="/login">Login</a>
+                <a class="nav-link {% block nav_login %}{% endblock %}" style="margin-bottom:20px;" href="/login">Login</a>
                 {% endif %}
             </nav>
         </div>
