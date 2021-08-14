@@ -6,7 +6,8 @@
 {% block content %}
 
 
-<div id="createAccountModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="createAccountModal" role="dialog"
+     tabindex="-1">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -23,7 +24,89 @@
                 </form>
             </div>
             <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" form="accountCreate" value="Create Account">
+                <input class="btn btn-primary" form="accountCreate" type="submit" value="Create Account">
+                <button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="sendMoneyModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark">Send/Transfer Money</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="moneySend" method="POST">
+                    <div class="form-group">
+                        <label for="inputFromAccountID" class="text-dark">FROM: Account ID</label>
+                        <select class="form-select" id="inputFromAccountID" name="account_from" aria-label="Default select example">
+                            <option selected>--Select the account you want to send money from--</option>
+                            {% for a in accounts %}
+                                <option value="{{ a.id }}">({{ a.id }}) {{ a.account_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAccountID" class="text-dark">TO: Account ID</label>
+                        <input type="number" class="form-control" id="inputAccountID" aria-describedby="accountToHelp"
+                               name="account_to">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputAmount" class="text-dark">Amount</label>
+                        <div class="dollar"><input type="number" class="form-control" id="inputAmount" aria-describedby="TransferMoneyHelp"
+                        name="amount"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-primary" form="moneySend" type="submit" value="Send Money">
+                <button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="transferPropertyModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark">Transfer a Property</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="propertyTransfer" method="POST">
+                    <div class="form-group">
+                        <label class="text-dark" for="inputEditProperty">Which property do you want to transfer?</label>
+                        <input class="form-control" id="exampleEditDataList2" list="inputEditProperty"
+                               name="property_name"
+                               placeholder="Type to search..." {% if properties|length == 0 %} readonly value="You don't own any properties." {% endif %}>
+                        <datalist id="inputEditProperty">
+                            {% for p in properties %}
+                            <option value="{{ p.id }}">{{ p.property_name }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-dark" for="inputEditUserID">Who do you want to send the property to?</label>
+                        <input class="form-control" id="exampleEditDataList" list="inputEditUserID"
+                               name="property_owner"
+                               placeholder="Type to search..." {% if properties|length == 0 %} readonly {% endif %}>
+                        <datalist id="inputEditUserID">
+                            {% for u in users %}
+                            <option value="{{ u.user_id }}">{{ u.user_name }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-primary" form="propertyTransfer" type="submit" {% if properties|length == 0 %} disabled {% endif %} value="Send Property">
                 <button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -37,7 +120,13 @@
         <hr>
         <p><strong>Networth: </strong>{{ server.currency }}{{ networth }}</p>
         <hr>
-        <h4 class="mb-5">Properties</h4>
+        <h4 class="mb-2">Properties
+            <button class="btn btn-light float-right" data-bs-target="#transferPropertyModal"
+                    data-bs-toggle="modal"
+                    type="button"><i class="bi bi-box-arrow-in-right"></i>
+            </button>
+            <a href="/properties-dashboard/{{ server.guild_id }}" class="btn btn-light float-right"><i class="bi bi-list"></i></a>
+        </h4>
         <ol class="list-group list-group-numbered mb-5">
             {% for p in properties%}
             <li class="list-group-item d-flex justify-content-between align-items-start bg-secondary">
@@ -47,7 +136,7 @@
                 <span class="badge bg-primary rounded-pill">{{ server.currency }}{{ p.property_value }}</span>
             </li>
             {% endfor %}
-            {% if properties.count() == 0 %}
+            {% if properties|length == 0 %}
             <li class="list-group-item d-flex justify-content-between align-items-start bg-warning">
                 <div class="ms-2 me-auto">
                     <div class="fw-bold text-light">You do not own any properties ;(</div>
@@ -56,22 +145,81 @@
             {% endif %}
         </ol>
     </div>
+    <hr>
     <div class="row">
         <h4>Accounts
             <button type="button" class="btn btn-light float-right" data-bs-toggle="modal"
-                    data-bs-target="#createAccountModal">Create Account
+                    data-bs-target="#createAccountModal"><i class="bi bi-plus"></i>
             </button>
         </h4>
     </div>
     <div class="row">
         {% for a in accounts %}
-        <div class="col border border-light mx-2">
-            <h3>{{ a.account_name }}</h3>
+        <div class="col border border-light mx-2 mb-3">
+            <h3>{{ a.account_name }}{% if user.user_main_account == a.id %} <small class="h5 text-muted">Default</small>{%
+                endif %}</h3>
+            <small class="text-muted">Account Number: {{a.id}}</small>
             <hr>
             <p>Total: {{ server.currency }}{{ a.account_balance }}</p>
-            <a href="/delete_account?account_id={{ a.id }}" class="btn btn-danger float-right mb-3">Delete Account</a>
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle mb-2" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    Options
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#sendMoneyModal" href="#">Send Money</a></li>
+                    <li>
+                        <hr>
+                    </li>
+                    <li><a href="/delete_account?account_id={{ a.id }}" class="dropdown-item text-danger">Delete
+                        Account</a></li>
+                    <li><a href="/make_default_account?account_id={{ a.id }}" class="dropdown-item" href="#">Default
+                        Account</a></li>
+                </ul>
+            </div>
         </div>
         {% endfor %}
     </div>
+    <hr>
+    <h4 class="mb-1">Transaction Logs</h4>
+    <table class="table table-striped table-dark">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Log</th>
+            <th scope="col">Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for t in transactions %}
+        <tr>
+            <th scope="row">{{ t.id }}</th>
+            <td>{{ t.description }}</td>
+            <td>{{ t.time }}</td>
+        </tr>
+        {% endfor %}
+
+        {% if transactions.count() == 0 %}
+        <tr class="table-danger">
+            <th colspan="5">No transaction logs</th>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
 </div>
+<style>
+       .dollar{
+            position: relative;
+            color: black;
+            }
+       .dollar input{
+            padding-left:15px;
+            }
+       .dollar:before {
+            position: absolute;
+            content:"{{ server.currency }}";
+            left:5px;
+            top:6px;
+            }
+</style>
 {% endblock %}

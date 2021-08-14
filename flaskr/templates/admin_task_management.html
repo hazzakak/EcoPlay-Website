@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block nav_admin_dash %}active{% endblock %}
+
+{% block header %} mb-5{% endblock %}
+{% block content %}
+
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="createPropertyModal" role="dialog"
+     tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark">Create Task</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+            </div>
+            <div class="modal-body">
+                <form id="propertyCreate" method="POST">
+                    <div class="form-group">
+                        <label class="text-dark" for="inputTaskType">Task Type</label>
+                        <select class="form-control" id="inputTaskType" name="task_type">
+                            <option value="person">Person</option>
+                            <option value="role">Role</option>
+                          </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-dark" for="inputTaskAmount">Amount</label>
+                        <div class="dollar"><input aria-describedby="accountNameHelp" class="form-control"
+                                                   id="inputTaskAmount"
+                                                   name="task_amount"
+                                                   placeholder="Enter account value" type="number"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="text-dark" for="inputTargetID">Target Discord ID</label>
+                        <input class="form-control" id="inputTargetID" type="number" name="target_id">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-dark" for="inputFrequency">Frequency (Every <i>n</i> day(s))</label>
+                        <input class="form-control" id="inputFrequency" type="number" name="frequency">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-primary" form="propertyCreate" type="submit" value="Create Property">
+                <button class="btn btn-secondary text-light" data-bs-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h1 class="text-center">Admin Dashboard</h1>
+<div class="container">
+    <div class="container ">
+        <h4>Welcome, Administrator - {{ session['name'] }}</h4>
+        <hr>
+        <div class="row">
+            <div class="col-xs-4">
+                <a class="btn btn-primary" href="/admin-dashboard/{{server.guild_id}}">Settings</a>
+                <a href="/bank-accounts/{{ server.guild_id }}" class="btn btn-primary">Bank Accounts</a>
+                <a class="btn btn-primary" href="/properties/{{server.guild_id}}">Properties</a>
+            </div>
+        </div>
+        <hr>
+        <div class="container">
+            <div class="card-body tab-content">
+                <div class="tab-pane active" id="profile">
+                    <h6>TASK MANAGEMENT <button class="btn btn-light float-right" data-bs-target="#createPropertyModal"
+                        data-bs-toggle="modal"
+                        type="button"><i class="bi bi-plus"></i>
+                </button></h6>
+                    <hr>
+                    <table class="table table-dark table-striped border border-dark rounded" style="position: relative;height: 400px;overflow: auto;display:block;">
+                        <thead>
+                            <tr>
+                              <th scope="col">Task Type</th>
+                              <th scope="col">Task Target ID</th>
+                              <th scope="col">Task Amount</th>
+                              <th scope="col">Task Frequency</th>
+                              <th scope="col">Options</th>
+
+                            </tr>
+                          </thead>
+                          <tbody id="myTable">
+                            {% for t in tasks %}
+                            <tr>
+                              <td>{{ t.type }}</td>
+                              <td>{{ t.target_id }}</td>
+                              <td>{{ server.currency }}{{ t.amount }}</td>
+                              <td>{{ t.frequency }}</td>
+                              <td><a href="/admin/delete-task?task_id={{ t.id }}" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a></td>
+                            </tr>
+                            {% endfor %}
+                      </table>
+                      
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dollar{
+         position: relative;
+         color: black;
+         }
+    .dollar input{
+         padding-left:15px;
+         }
+    .dollar:before {
+         position: absolute;
+         content:"{{ server.currency }}";
+         left:5px;
+         top:6px;
+         }
+</style>
+{% endblock %}
