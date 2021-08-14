@@ -2,4 +2,4 @@
 .idea
 **/__pycache__
 __pycache__
-**/economy.db
+flaskr/utils/economy.db
