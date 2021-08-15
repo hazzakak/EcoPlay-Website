@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-index = Blueprint("index", __name__)
+docs = Blueprint("docs", __name__)
 
 from . import routes
