@@ -5,7 +5,7 @@ from flask import request, jsonify
 
 from . import api
 from .. import db
-from ..models import Server, User, Property, Task, Account
+from ..models import Server, TransactionLog, User, Property, Task, Account
 
 """ example
 @api.route('/api/v1.0/server/create_server', methods=['GET'])
@@ -35,6 +35,12 @@ def create_server():
     -Get/Create Account
     -Force Delete Account
 """
+
+
+def add_transaction(userid, description):
+    transaction = TransactionLog(user_id=userid, description=description)
+    db.session.add(transaction)
+    db.session.commit()
 
 
 @api.route("/api/v1.0/server/create_server", methods=["GET"])
@@ -498,6 +504,8 @@ def set_property_owner():
         property.property_owner_id = new_value
         db.session.commit()
 
+        add_transaction(new_value, f"Received property {property.property_name}")
+
         return_json = {"response": 200}
         return jsonify(return_json)
     else:
@@ -764,6 +772,10 @@ def create_account():
         db.session.add(new_account)
         db.session.commit()
 
+        add_transaction(
+            new_account.account_user.id, f"Created new account {new_account.id}"
+        )
+
         return_json = {"response": 200, "id": new_account.id}
         return jsonify(return_json)
     else:
@@ -954,6 +966,10 @@ def deposit():
         account.account_balance += int(amount)
         db.session.commit()
 
+        add_transaction(
+            account.account_user.id, f"{amount} was deposited into your account: {id}"
+        )
+
         return_json = {"response": 200, "account_id": account.id}
         return jsonify(return_json)
     else:
@@ -976,6 +992,10 @@ def withdraw():
 
         account.account_balance -= int(amount)
         db.session.commit()
+
+        add_transaction(
+            account.account_user.id, f"{amount} was withdrawn from your account: {id}"
+        )
 
         return_json = {"response": 200, "account_id": account.id}
         return jsonify(return_json)
