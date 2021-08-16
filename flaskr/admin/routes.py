@@ -372,7 +372,11 @@ def accounts_dashboard(guild):
 
             account.account_balance = account_value
 
-            print(account_value, account_id)
+            transaction = TransactionLog(
+                user_id=account.account_user.id,
+                description=f"Account balance set to {account_value}",
+            )
+            db.session.add(transaction)
 
             db.session.commit()
 
