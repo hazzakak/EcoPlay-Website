@@ -26,14 +26,14 @@
                     <form id="serverSettings" method="POST">
                         <div class="form-group">
                             <label for="maxAccounts">Max Accounts</label>
-                            <input type="number" name="max_accounts" class="form-control" id="maxAccounts"
+                            <input type="number" name="max_accounts" class="form-control {% if banker %}disabled{% endif %}" id="maxAccounts"
                                    aria-describedby="maxAccountsHelp" value="{{ server.max_accounts }}">
                             <small id="maxAccountsHelp" class="form-text text-muted">How many accounts a user can
                                 open.</small>
                         </div>
                         <div class="form-group">
                             <label for="bankerRole">Banker Role</label>
-                            <input type="number" name="banker_role" class="form-control" id="bankerRole"
+                            <input type="number" name="banker_role" class="form-control {% if banker %}disabled{% endif %}" id="bankerRole"
                                    aria-describedby="bankerRoleHelp" value="{{ server.banker_role }}">
                             <small id="bankerRoleHelp" class="form-text text-muted">The ID of the role of which Bankers
                                 have, for functions such as deleting accounts, adding money, and resetting
@@ -41,14 +41,14 @@
                         </div>
                         <div class="form-group">
                             <label for="currency">Currency</label>
-                            <input type="text" name="currency" class="form-control" id="currency"
+                            <input type="text" name="currency" class="form-control {% if banker %}disabled{% endif %}" id="currency"
                                    aria-describedby="currencyHelp" value="{{ server.currency }}">
                             <small id="currencyHelp" class="form-text text-muted">The currency form that will show in
                                 front of all currency numbers. (ex. £)</small>
                         </div>
                         <div class="form-group">
                             <label for="startingAmount">Starting Amount</label>
-                            <div class="dollar"><input type="number" name="starting_amount" class="form-control" id="startingAmount"
+                            <div class="dollar"><input type="number" name="starting_amount" class="form-control {% if banker %}disabled{% endif %}" id="startingAmount"
                                                        aria-describedby="startingAmountHelp" value="{{ server.starting_amount }}"></div>
                             <small id="startingAmountHelp" class="form-text text-muted">The amount of money a new user
                                 will start with.</small>
