@@ -207,15 +207,20 @@ def properties_dashboard(guild):
         )
 
     isAdmin = False
+    isBanker = False
 
     for g in session["guilds"]:
         if g[2] and int(guild) == int(g[1]):
             isAdmin = True
+        if g[3] and int(guild) == int(g[1]):
+            isBanker = True
+
+        if int(guild) == int(g[1]):
             break
         else:
             continue
 
-    if not isAdmin:
+    if not isAdmin and not isBanker:
         flash("You're not an admin in this server.", "danger")
         return render_template(
             "choose_guild.html",
@@ -328,15 +333,20 @@ def accounts_dashboard(guild):
         )
 
     isAdmin = False
+    isBanker = False
 
     for g in session["guilds"]:
         if g[2] and int(guild) == int(g[1]):
             isAdmin = True
+        if g[3] and int(guild) == int(g[1]):
+            isBanker = True
+
+        if int(guild) == int(g[1]):
             break
         else:
             continue
 
-    if not isAdmin:
+    if not isAdmin and not isBanker:
         flash("You're not an admin in this server.", "danger")
         return render_template(
             "choose_guild.html",
@@ -422,15 +432,20 @@ def tasks_dashboard(guild):
         )
 
     isAdmin = False
+    isBanker = False
 
     for g in session["guilds"]:
         if g[2] and int(guild) == int(g[1]):
             isAdmin = True
+        if g[3] and int(guild) == int(g[1]):
+            isBanker = True
+
+        if int(guild) == int(g[1]):
             break
         else:
             continue
 
-    if not isAdmin:
+    if not isAdmin and not isBanker:
         flash("You're not an admin in this server.", "danger")
         return render_template(
             "choose_guild.html",
