@@ -19,7 +19,7 @@ def delete_property():
     isAdmin = False
 
     for g in session["guilds"]:
-        if g[2] and int(property.property_guild) == int(g[1]):
+        if g[2] or g[3] and int(property.property_guild) == int(g[1]):
             isAdmin = True
             break
         else:
@@ -45,7 +45,7 @@ def delete_account():
     guild = account.account_guild_id
 
     for g in session["guilds"]:
-        if g[2] and int(account.account_guild_id) == int(g[1]):
+        if g[2] or g[3] and int(property.property_guild) == int(g[1]):
             isAdmin = True
             break
         else:
@@ -115,7 +115,7 @@ def admin_dashboard(guild):
     isAdmin = False
 
     for g in session["guilds"]:
-        if g[2] and int(guild) == int(g[1]):
+        if g[2] or g[3] and int(property.property_guild) == int(g[1]):
             isAdmin = True
             break
         else:
@@ -157,6 +157,10 @@ def admin_dashboard(guild):
     server = Server.query.filter_by(guild_id=guild).first()
 
     if request.method == "POST":
+        if not g[2]:
+            flash("You must be an admin to change server settings.", "danger")
+            return redirect(url_for("admin.admin_dashboard"))
+
         max_accounts = request.form.get("max_accounts")
         banker_role = request.form.get("banker_role")
         currency = request.form.get("currency")
@@ -174,6 +178,7 @@ def admin_dashboard(guild):
         user=user if user is not None else None,
         logged_in=session["logged_in"],
         server=server,
+        banker=False if g[2] else g[3],
     )
 
 

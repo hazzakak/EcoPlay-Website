@@ -70,9 +70,25 @@ def discordlogin():
 
     guilds_list = []
     for i in t.json():
-        if Server.query.filter_by(guild_id=i["id"]).first():
+        server = Server.query.filter_by(guild_id=i["id"]).first()
+        if server:
+            v = requests.get(
+                f"https://discord.com/api/v8/guilds/{i['id']}/members/{s['id']}",
+                headers={
+                    "Authorization": "Bot "
+                    + "NzY3NzQ5MzYwNTg2MzI2MDI2.X42cTw.xDKKTtRJLNexwnmCac96YSKXVe4"
+                },
+            )
+
+            v = v.json()
+
             guilds_list.append(
-                [i["name"], i["id"], True if int(i["permissions"]) & 8 == 8 else False]
+                [
+                    i["name"],
+                    i["id"],
+                    True if int(i["permissions"]) & 8 == 8 else False,
+                    True if server.banker_role in v["roles"] else False,
+                ]
             )
 
     session["guilds"] = guilds_list
