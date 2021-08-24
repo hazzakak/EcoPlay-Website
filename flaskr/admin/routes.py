@@ -116,10 +116,10 @@ def admin_dashboard(guild):
     isBanker = False
 
     for g in session["guilds"]:
-        if g[2] and int(property.property_guild) == int(g[1]):
+        if g[2] and int(guild) == int(g[1]):
             isAdmin = True
             break
-        elif g[3] and int(property.property_guild) == int(g[1]):
+        elif g[3] and int(guild) == int(g[1]):
             isBanker = True
             break
         else:
