@@ -81,13 +81,13 @@ def discordlogin():
             )
 
             v = v.json()
-
+            print(str(server.banker_role) in v["roles"])
             guilds_list.append(
                 [
                     i["name"],
                     i["id"],
                     True if int(i["permissions"]) & 8 == 8 else False,
-                    True if int(server.banker_role) in v["roles"] else False,
+                    str(server.banker_role) in v["roles"],
                 ]
             )
 

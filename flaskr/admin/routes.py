@@ -118,9 +118,10 @@ def admin_dashboard(guild):
     for g in session["guilds"]:
         if g[2] and int(guild) == int(g[1]):
             isAdmin = True
-            break
-        elif g[3] and int(guild) == int(g[1]):
+        if g[3] and int(guild) == int(g[1]):
             isBanker = True
+
+        if int(guild) == int(g[1]):
             break
         else:
             continue
