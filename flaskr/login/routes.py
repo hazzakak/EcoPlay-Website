@@ -87,7 +87,7 @@ def discordlogin():
                     i["name"],
                     i["id"],
                     True if int(i["permissions"]) & 8 == 8 else False,
-                    True if server.banker_role in v["roles"] else False,
+                    True if int(server.banker_role) in v["roles"] else False,
                 ]
             )
 
