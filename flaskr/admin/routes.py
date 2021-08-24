@@ -113,15 +113,19 @@ def admin_dashboard(guild):
         )
 
     isAdmin = False
+    isBanker = False
 
     for g in session["guilds"]:
-        if g[2] or g[3] and int(property.property_guild) == int(g[1]):
+        if g[2] and int(property.property_guild) == int(g[1]):
             isAdmin = True
+            break
+        elif g[3] and int(property.property_guild) == int(g[1]):
+            isBanker = True
             break
         else:
             continue
 
-    if not isAdmin:
+    if not isAdmin or not isBanker:
         flash("You're not an admin in this server.", "danger")
         return render_template(
             "choose_guild.html",
