@@ -113,15 +113,19 @@ def admin_dashboard(guild):
         )
 
     isAdmin = False
+    isBanker = False
 
     for g in session["guilds"]:
-        if g[2] or g[3] and int(property.property_guild) == int(g[1]):
+        if g[2] and int(guild) == int(g[1]):
             isAdmin = True
+            break
+        elif g[3] and int(guild) == int(g[1]):
+            isBanker = True
             break
         else:
             continue
 
-    if not isAdmin:
+    if not isAdmin and not isBanker:
         flash("You're not an admin in this server.", "danger")
         return render_template(
             "choose_guild.html",
@@ -156,6 +160,8 @@ def admin_dashboard(guild):
 
     server = Server.query.filter_by(guild_id=guild).first()
 
+    isBanker = False if isAdmin and isBanker else isBanker
+
     if request.method == "POST":
         if not g[2]:
             flash("You must be an admin to change server settings.", "danger")
@@ -178,7 +184,7 @@ def admin_dashboard(guild):
         user=user if user is not None else None,
         logged_in=session["logged_in"],
         server=server,
-        banker=False if g[2] else g[3],
+        banker=isBanker,
     )
 
 
