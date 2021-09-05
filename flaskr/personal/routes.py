@@ -96,37 +96,37 @@ def purchase_property():
 @personal.route("/personal-dashboard/<guild>", methods=["GET", "POST"])
 def pers_dashboard(guild):
     user = None
-    if not session["logged_in"]:
+    if not session.get("logged_in"):
         return redirect(url_for("login.index"))
-    if not session["userid"]:
+    if not session.get("userid"):
         return redirect(url_for("login.index"))
 
     if not guild:
         return render_template(
             "choose_guild.html",
             user=user if user is not None else None,
-            guilds=session["guilds"],
-            logged_in=session["logged_in"],
+            guilds=session.get("guilds"),
+            logged_in=session.get("logged_in"),
         )
 
     user_exists = User.query.filter_by(
-        user_id=session["userid"], user_associated_guild=guild
+        user_id=session.get("userid"), user_associated_guild=guild
     ).first()
     if user_exists:
         user = user_exists
-        user.user_email = session["email"]
+        user.user_email = session.get("email")
         db.session.commit()
     else:
         inserting_account = Account(
-            account_user_id=session["userid"], account_guild_id=guild
+            account_user_id=session.get("userid"), account_guild_id=guild
         )
         db.session.add(inserting_account)
         db.session.commit()
 
         inserting_user = User(
-            user_id=session["userid"],
-            user_email=session["email"],
-            user_name=session["name"],
+            user_id=session.get("userid"),
+            user_email=session.get("email"),
+            user_name=session.get("name"),
             user_associated_guild=guild,
             user_main_account=inserting_account.id,
         )
@@ -140,7 +140,7 @@ def pers_dashboard(guild):
         property_guild=guild, property_owner_id=user.user_id
     ).all()
     accounts = Account.query.filter_by(
-        account_user_id=session["userid"], account_guild_id=guild
+        account_user_id=session.get("userid"), account_guild_id=guild
     )
     server = Server.query.filter_by(guild_id=guild).first()
     networth = 0
@@ -155,7 +155,7 @@ def pers_dashboard(guild):
         if "account_name" in request.form:
             account_name = request.form.get("account_name")
             inserting_account = Account(
-                account_user_id=session["userid"],
+                account_user_id=session.get("userid"),
                 account_guild_id=guild,
                 account_name=account_name,
                 account_balance=0,
@@ -236,7 +236,7 @@ def pers_dashboard(guild):
     return render_template(
         "civ_dashboard.html",
         user=user if user is not None else None,
-        logged_in=session["logged_in"],
+        logged_in=session.get("logged_in"),
         main_account=main_account,
         properties=properties,
         accounts=accounts,
@@ -253,17 +253,17 @@ def pers_dashboard(guild):
 @personal.route("/properties-dashboard/<guild>", methods=["GET", "POST"])
 def prop_dashboard(guild):
     user = None
-    if not session["logged_in"]:
+    if not session.get("logged_in"):
         return redirect(url_for("login.index"))
-    if not session["userid"]:
+    if not session.get("userid"):
         return redirect(url_for("login.index"))
 
     if not guild:
         return render_template(
             "choose_guild.html",
             user=user if user is not None else None,
-            guilds=session["guilds"],
-            logged_in=session["logged_in"],
+            guilds=session.get("guilds"),
+            logged_in=session.get("logged_in"),
         )
 
     user_exists = User.query.filter_by(
@@ -271,19 +271,19 @@ def prop_dashboard(guild):
     ).first()
     if user_exists:
         user = user_exists
-        user.user_email = session["email"]
+        user.user_email = session.get("email")
         db.session.commit()
     else:
         inserting_account = Account(
-            account_user_id=session["userid"], account_guild_id=guild
+            account_user_id=session.get("userid"), account_guild_id=guild
         )
         db.session.add(inserting_account)
         db.session.commit()
 
         inserting_user = User(
-            user_id=session["userid"],
-            user_email=session["email"],
-            user_name=session["name"],
+            user_id=session.get("userid"),
+            user_email=session.get("email"),
+            user_name=session.get("name"),
             user_associated_guild=guild,
             user_main_account=inserting_account.id,
         )
@@ -300,7 +300,7 @@ def prop_dashboard(guild):
     return render_template(
         "civ_properties.html",
         user=user if user is not None else None,
-        logged_in=session["logged_in"],
+        logged_in=session.get("logged_in"),
         properties=properties,
         users=User.query.filter_by(user_associated_guild=guild),
         server=server,
