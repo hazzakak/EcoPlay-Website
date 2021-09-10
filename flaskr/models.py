@@ -99,3 +99,12 @@ class TransactionLog(db.Model):
 
     def __repr__(self):
         return "<Transaction Log %r>" % self.id
+
+
+class AdminLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    log = db.Column(db.Integer)
+    time = db.Column(db.DateTime(timezone=True), server_default=func.now())
+
+    def __repr__(self):
+        return "<Log %r>" % self.id

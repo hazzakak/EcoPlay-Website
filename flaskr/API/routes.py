@@ -5,7 +5,7 @@ from flask import request, jsonify
 
 from . import api
 from .. import db
-from ..models import Server, TransactionLog, User, Property, Task, Account
+from ..models import Server, TransactionLog, User, Property, Task, Account, AdminLog
 
 """ example
 @api.route('/api/v1.0/server/create_server', methods=['GET'])
@@ -43,20 +43,23 @@ def add_transaction(userid, description):
     db.session.commit()
 
 
+def add_log(log):
+    log = AdminLog(log=log)
+    db.session.add(log)
+    db.session.commit()
+
+
 @api.route("/api/v1.0/server/create_server", methods=["GET"])
 def create_server():
     key = request.form.get("api_key")
     guild_id = request.form.get("guild_id")
 
-    print(1)
-
-    print(key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP", key)
-
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         new_server = Server(guild_id=guild_id)
         db.session.add(new_server)
         db.session.commit()
-        print(1)
+
+        add_log(f"Joined and created server: {new_server.id}")
 
         return_json = {"response": 200, "id": new_server.id}
         return jsonify(return_json)
@@ -134,11 +137,14 @@ def set_starting_amount():
     key = request.form.get("api_key")
     guild_id = request.form.get("guild_id")
     new_value = request.form.get("new_value")
+    person = request.form.get("person")
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         server = Server.query.filter_by(guild_id=guild_id).first()
         server.starting_amount = new_value
         db.session.commit()
+
+        add_log(f"Guild: {guild_id}. {person} set starting amount to: {new_value}")
 
         return_json = {"response": 200}
         return jsonify(return_json)
@@ -152,11 +158,14 @@ def set_currency():
     key = request.form.get("api_key")
     guild_id = request.form.get("guild_id")
     new_value = request.form.get("new_value")
+    person = request.form.get("person")
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         server = Server.query.filter_by(guild_id=guild_id).first()
         server.currency = new_value
         db.session.commit()
+
+        add_log(f"Guild: {guild_id}. {person} set currency to: {new_value}")
 
         return_json = {"response": 200}
         return jsonify(return_json)
@@ -171,10 +180,14 @@ def set_banker_role():
     guild_id = request.form.get("guild_id")
     new_value = request.form.get("new_value")
 
+    person = request.form.get("person")
+
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         server = Server.query.filter_by(guild_id=guild_id).first()
         server.banker_role = new_value
         db.session.commit()
+
+        add_log(f"Guild: {guild_id}. {person} set banking role to: {new_value}")
 
         return_json = {"response": 200}
         return jsonify(return_json)
@@ -189,10 +202,14 @@ def set_max_accounts():
     guild_id = request.form.get("guild_id")
     new_value = request.form.get("new_value")
 
+    person = request.form.get("person")
+
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         server = Server.query.filter_by(guild_id=guild_id).first()
         server.max_accounts = new_value
         db.session.commit()
+
+        add_log(f"Guild: {guild_id}. {person} set max accounts to: {new_value}")
 
         return_json = {"response": 200}
         return jsonify(return_json)
@@ -263,6 +280,7 @@ def create_property():
     guild_id = request.form.get("guild_id")
     name = request.form.get("name")
     value = request.form.get("value")
+    person = request.form.get("person")
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         exists = Property.query.filter_by(property_name=name).first()
@@ -274,6 +292,8 @@ def create_property():
         )
         db.session.add(new_property)
         db.session.commit()
+
+        add_log(f"Guild: {guild_id}. {person} created property {name}.")
 
         return_json = {"response": 200, "id": new_property.id}
         return jsonify(return_json)
@@ -475,6 +495,7 @@ def set_property_value():
     name = request.form.get("name")
     guild = request.form.get("guild")
     new_value = request.form.get("new_value")
+    person = request.form.get("person")
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         property = Property.query.filter_by(
@@ -482,6 +503,8 @@ def set_property_value():
         ).first()
         property.property_value = new_value
         db.session.commit()
+
+        add_log(f"Guild: {guild}. {person} set property value of {name}.")
 
         return_json = {"response": 200}
         return jsonify(return_json)
@@ -496,6 +519,7 @@ def set_property_owner():
     name = request.form.get("name")
     guild = request.form.get("guild")
     new_value = request.form.get("new_value")
+    person = request.form.get("person")
 
     if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
         property = Property.query.filter_by(
@@ -504,6 +528,7 @@ def set_property_owner():
         property.property_owner_id = new_value
         db.session.commit()
 
+        add_log(f"Guild: {guild}. {person} set property owner of {name}.")
         add_transaction(new_value, f"Received property {property.property_name}")
 
         return_json = {"response": 200}
@@ -822,15 +847,11 @@ def get_default_account():
             db.session.add(new_user)
             db.session.add(new_account)
             db.session.commit()
-            print(1)
 
             account = Account.query.filter_by(id=new_account.id).first()
         else:
-            print(2)
-            print(user.user_main_account)
             account = Account.query.filter_by(id=user.user_main_account).first()
 
-        print(account)
         rtn_lst = [
             account.id,
             account.account_user_id,

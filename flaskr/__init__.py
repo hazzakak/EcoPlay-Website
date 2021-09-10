@@ -1,12 +1,28 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
 
+def page_not_found(e):
+    return render_template("error.html", message="This page was not found."), 404
+
+
+def page_forbidden(e):
+    return render_template("error.html", message="Forbidden Page"), 403
+
+
+def page_error(e):
+    return render_template("error.html", message="There has been an error occur."), 500
+
+
 def create_app():
 
     app = Flask(__name__)
+
+    app.register_error_handler(404, page_not_found)
+    app.register_error_handler(403, page_forbidden)
+    app.register_error_handler(500, page_error)
 
     from .login import login as login_blueprint
 

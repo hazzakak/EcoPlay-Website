@@ -1,15 +1,36 @@
-from flask import render_template, session, url_for, flash, request
+from flask import render_template, session, url_for, flash, request, abort
 from werkzeug.utils import redirect
 import datetime, time
 
 from . import admin
 from .. import db
-from ..models import Task, User, Account, Server, Property, TransactionLog
+from ..models import Task, User, Account, Server, Property, TransactionLog, AdminLog
 
 API_ENDPOINT = "https://discord.com/api/v8"
 CLIENT_ID = "767749360586326026"
 CLIENT_SECRET = "B8JBIE949Ak5DZZ-6DsmD4mG20Rf1U_S"
 REDIRECT_URI = "http://localhost:5000/discord/auth"
+
+
+def add_log(log):
+    log = AdminLog(log=log)
+    db.session.add(log)
+    db.session.commit()
+
+
+@admin.route("/owner-dashboard", methods=["GET", "POST"])
+def owner_dashboard():
+    if request.remote_addr != "90.211.156.180" and request.remote_addr != "127.0.0.1":
+        abort(403)
+
+    return render_template(
+        "owner_dashboard.html",
+        logged_in=session["logged_in"],
+        members=len(User.query.all()),
+        guilds=len(Server.query.all()),
+        accounts=len(Account.query.all()),
+        logs=AdminLog.query.all(),
+    )
 
 
 @admin.route("/delete_property", methods=["GET", "POST"])
@@ -31,6 +52,9 @@ def delete_property():
 
     db.session.delete(property)
     db.session.commit()
+    add_log(
+        f"Guild: {property.property_guild}. {session['userid']} deleted property {property.property_name}"
+    )
     return redirect(
         url_for("admin.properties_dashboard", guild=property.property_guild)
     )
@@ -69,6 +93,7 @@ def delete_account():
 
     db.session.delete(account)
     db.session.commit()
+    add_log(f"Guild: {guild}. {session['userid']} deleted account {code}")
     return redirect(url_for("admin.accounts_dashboard", guild=guild))
 
 
@@ -92,6 +117,8 @@ def delete_task():
 
     db.session.delete(task)
     db.session.commit()
+    add_log(f"Guild: {task.guild_id}. {session['userid']} deleted task {id}")
+
     return redirect(url_for("admin.tasks_dashboard", guild=task.guild_id))
 
 
