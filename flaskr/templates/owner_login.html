@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Choose Guild{% endblock %}
+
+{% block header %} mb-auto {% endblock %}
+
+{% block content %}
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+</style>
+<div class="bg-secondary rounded p-3">
+    <form method="POST">
+        <div class="form-group">
+            <input
+                type="number"
+                id="password"
+                name="pin"
+                pattern="[0-9]{4}"
+                maxlength="6"
+                style="-webkit-text-security: disc;"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                />
+        <div class="form-group">
+
+            <button type="submit" class="btn btn-primary mt-2">Enter Pin</button>
+
+        </div>
+    </form>
+</div>
+{% endblock %}

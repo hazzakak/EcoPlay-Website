@@ -20,12 +20,29 @@ def add_log(log):
 
 @admin.route("/owner-dashboard", methods=["GET", "POST"])
 def owner_dashboard():
-    print(request.remote_addr)
-    if request.remote_addr not in ["162.158.159.31", "90.211.156.180", "127.0.0.1"]:
-        abort(403)
+    user = None
+    if not session["logged_in"]:
+        return redirect(url_for("login.index"))
+    if not session["userid"]:
+        return redirect(url_for("login.index"))
 
     if session["userid"] != "302454373882003456":
         abort(403)
+
+    if request.method == "POST":
+        pin = request.form.get("pin")
+        if pin != "124569":
+            abort(403)
+        else:
+            session["owner_pass"] = True
+
+    if not session.get("owner_pass"):
+        return render_template(
+            "owner_login.html",
+            user=user if user is not None else None,
+            guilds=session["guilds"],
+            logged_in=session["logged_in"],
+        )
 
     return render_template(
         "owner_dashboard.html",
