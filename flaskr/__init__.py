@@ -1,19 +1,61 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
 
 def page_not_found(e):
-    return render_template("error.html", message="This page was not found."), 404
+    user = None
+
+    if session.get("userid"):
+        from flaskr.models import User
+
+        user = User.query.filter_by(id=session["userid"]).first()
+    return (
+        render_template(
+            "error.html",
+            user=user if user is not None else None,
+            logged_in=session.get("logged_in"),
+            message="This page was not found.",
+        ),
+        404,
+    )
 
 
 def page_forbidden(e):
-    return render_template("error.html", message="Forbidden Page"), 403
+    user = None
+
+    if session.get("userid"):
+        from flaskr.models import User
+
+        user = User.query.filter_by(id=session["userid"]).first()
+    return (
+        render_template(
+            "error.html",
+            user=user if user is not None else None,
+            logged_in=session.get("logged_in"),
+            message="Forbidden Page",
+        ),
+        403,
+    )
 
 
 def page_error(e):
-    return render_template("error.html", message="There has been an error occur."), 500
+    user = None
+
+    if session.get("userid"):
+        from flaskr.models import User
+
+        user = User.query.filter_by(id=session["userid"]).first()
+    return (
+        render_template(
+            "error.html",
+            user=user if user is not None else None,
+            logged_in=session.get("logged_in"),
+            message="There has been an error occur.",
+        ),
+        500,
+    )
 
 
 def create_app():
