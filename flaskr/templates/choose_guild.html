@@ -7,7 +7,9 @@
 <div class="bg-secondary rounded p-3">
     <form onsubmit="location.href=window.location.href +'/' + document.getElementById('exampleFormControlSelect1').value; return false;">
         <div class="form-group">
-            <label for="exampleFormControlSelect1">Guild Select</label>
+            <label for="exampleFormControlSelect1"><strong>Guild Select</strong></label>
+            <br>
+            <small>If you don't see the server, logout and back in.</small>
             <select class="form-control" id="exampleFormControlSelect1">
                 {% for g in guilds %}
                 <option value="{{g[1]}}">{{g[0]}}</option>
