@@ -21,7 +21,7 @@ def add_log(log):
 @admin.route("/owner-dashboard", methods=["GET", "POST"])
 def owner_dashboard():
     print(request.remote_addr)
-    if request.remote_addr != "90.211.156.180" and request.remote_addr != "127.0.0.1":
+    if request.remote_addr not in ["162.158.159.31", "90.211.156.180", "127.0.0.1"]:
         abort(403)
 
     if session["userid"] != "302454373882003456":
