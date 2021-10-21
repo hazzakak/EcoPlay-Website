@@ -157,6 +157,7 @@ def admin_dashboard(guild):
             "choose_guild.html",
             user=user if user is not None else None,
             guilds=session["guilds"],
+            page="admin-dashboard",
             logged_in=session["logged_in"],
         )
 

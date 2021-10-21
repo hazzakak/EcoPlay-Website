@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="bg-secondary rounded p-3">
-    <form onsubmit="location.href=window.location.href +'/' + document.getElementById('exampleFormControlSelect1').value; return false;">
+    <form onsubmit="location.href=window.location.origin + '/{{ page }}/' + document.getElementById('exampleFormControlSelect1').value; return false;">
         <div class="form-group">
             <label for="exampleFormControlSelect1"><strong>Guild Select</strong></label>
             <br>
