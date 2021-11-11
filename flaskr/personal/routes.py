@@ -106,7 +106,6 @@ def pers_dashboard(guild):
             "choose_guild.html",
             user=user if user is not None else None,
             guilds=session.get("guilds"),
-            page="personal-dashboard",
             logged_in=session.get("logged_in"),
         )
 
