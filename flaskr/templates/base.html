@@ -58,7 +58,7 @@
                     <img src="{{ url_for('static', filename='nav_logo.png') }}" height="50" alt="">
                 </a>
                 <a class="nav-link {% block nav_home %}{% endblock %}" style="margin-bottom:20px;" aria-current="page" href="/">Home</a>
-                <a class="nav-link {% block nav_docs %}{% endblock %}" style="margin-bottom:20px;" href="/docs">Docs</a>
+                <a class="nav-link {% block nav_docs %}{% endblock %}" style="margin-bottom:20px;" href="https://docs.ecoplay.xyz/">Docs</a>
                 {% if logged_in %}
                 <a class="nav-link {% block nav_personal_dash %}{% endblock %}" style="margin-bottom:20px;" href="/personal-dashboard">Personal
                     Dashboard</a>

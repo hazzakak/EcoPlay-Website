@@ -5,6 +5,7 @@
 {% block header %} mb-auto {% endblock %}
 {% block content %}
 <div class="cover-container mx-auto text-center">
+    <img src="{{ url_for('static', filename='banner.gif') }}" class="img-fluid rounded mx-auto d-block mb-3" alt="">
     <h1 class="text-center">EcoPlay Discord Bot</h1>
     <p class="lead">Ecoplay is an economy discord bot which is geared towards roleplay communities to assist them and
         create an economy. There are a lot of administrative capabilities through the dashboard as well as an online
@@ -12,6 +13,7 @@
     <p class="lead">
         <a href="#" class="btn btn-lg btn-secondary fw-bold">Documentation</a>
         <a href="#" class="btn btn-lg btn-secondary fw-bold">Support Server</a>
+        <a href="https://discord.com/api/oauth2/authorize?client_id=767749360586326026&permissions=8&scope=bot" class="btn btn-lg btn-primary fw-bold">Add Discord Bot</a>
     </p>
 </div>
 {% endblock %}
