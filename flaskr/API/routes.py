@@ -798,7 +798,8 @@ def create_account():
         db.session.commit()
 
         add_transaction(
-            new_account.account_user.id, f"Created new account {new_account.id}"
+            new_account.account_user.account_user_id,
+            f"Created new account {new_account.id}",
         )
 
         return_json = {"response": 200, "id": new_account.id}
@@ -988,7 +989,7 @@ def deposit():
         db.session.commit()
 
         add_transaction(
-            account.account_user.id, f"{amount} was deposited into your account: {id}"
+            account.account_user_id, f"{amount} was deposited into your account: {id}"
         )
 
         return_json = {"response": 200, "account_id": account.id}
@@ -1015,7 +1016,7 @@ def withdraw():
         db.session.commit()
 
         add_transaction(
-            account.account_user.id, f"{amount} was withdrawn from your account: {id}"
+            account.account_user_id, f"{amount} was withdrawn from your account: {id}"
         )
 
         return_json = {"response": 200, "account_id": account.id}

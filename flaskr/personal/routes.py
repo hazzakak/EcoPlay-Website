@@ -195,14 +195,11 @@ def pers_dashboard(guild):
             account_from.account_balance -= int(amount)
             account_to.account_balance += int(amount)
 
-            db.session.commit()
-
             transaction = TransactionLog(
                 user_id=account_from.account_user.id,
                 description=f"Transfered {server.currency}{amount} from {account_from.id} to {account_to.id}",
             )
             db.session.add(transaction)
-
             db.session.commit()
 
             flash(
@@ -242,7 +239,7 @@ def pers_dashboard(guild):
         accounts=accounts,
         networth=networth,
         server=server,
-        transactions=TransactionLog.query.filter_by(user_id=user.id),
+        transactions=TransactionLog.query.filter_by(user_id=user.user_id),
         users=User.query.filter_by(user_associated_guild=guild),
     )
 
