@@ -37,8 +37,10 @@ def create_server():
 """
 
 
-def add_transaction(userid, description):
-    transaction = TransactionLog(user_id=userid, description=description)
+def add_transaction(userid, guildid, description):
+    transaction = TransactionLog(
+        user_id=userid, guild_id=guildid, description=description
+    )
     db.session.add(transaction)
     db.session.commit()
 
@@ -529,7 +531,7 @@ def set_property_owner():
         db.session.commit()
 
         add_log(f"Guild: {guild}. {person} set property owner of {name}.")
-        add_transaction(new_value, f"Received property {property.property_name}")
+        add_transaction(new_value, guild, f"Received property {property.property_name}")
 
         return_json = {"response": 200}
         return jsonify(return_json)
@@ -799,6 +801,7 @@ def create_account():
 
         add_transaction(
             new_account.account_user.account_user_id,
+            guild_id,
             f"Created new account {new_account.id}",
         )
 
@@ -989,7 +992,9 @@ def deposit():
         db.session.commit()
 
         add_transaction(
-            account.account_user_id, f"{amount} was deposited into your account: {id}"
+            account.account_user_id,
+            account.account_guild_id,
+            f"{amount} was deposited into your account: {id}",
         )
 
         return_json = {"response": 200, "account_id": account.id}
@@ -1016,7 +1021,9 @@ def withdraw():
         db.session.commit()
 
         add_transaction(
-            account.account_user_id, f"{amount} was withdrawn from your account: {id}"
+            account.account_user_id,
+            account.account_guild_id,
+            f"{amount} was withdrawn from your account: {id}",
         )
 
         return_json = {"response": 200, "account_id": account.id}

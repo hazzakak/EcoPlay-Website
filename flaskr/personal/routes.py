@@ -196,7 +196,8 @@ def pers_dashboard(guild):
             account_to.account_balance += int(amount)
 
             transaction = TransactionLog(
-                user_id=account_from.account_user.id,
+                user_id=account_from.account_user_id,
+                guild_id=account_from.account_guild_id,
                 description=f"Transfered {server.currency}{amount} from {account_from.id} to {account_to.id}",
             )
             db.session.add(transaction)
@@ -239,7 +240,9 @@ def pers_dashboard(guild):
         accounts=accounts,
         networth=networth,
         server=server,
-        transactions=TransactionLog.query.filter_by(user_id=user.user_id),
+        transactions=TransactionLog.query.filter_by(
+            user_id=user.user_id, guild_id=guild
+        ),
         users=User.query.filter_by(user_associated_guild=guild),
     )
 
