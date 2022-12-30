@@ -1,3 +1,12 @@
+# ECOPLAY
+# An economy system which connects discord and a website to enable roleplay communities and other fun communities to have an economic system.
+
+# Copyright (C) 2022, Harry Smith.
+# This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+# You may contact me via hazzakak@gmail.com
+
 import datetime
 import time
 
@@ -13,7 +22,7 @@ def create_server():
     key = request.form.get('api_key')
     guild_id = request.form.get('guild_id')
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == "":
         return
     else:
         return_json = {'response': 401}
@@ -56,7 +65,7 @@ def create_server():
     key = request.form.get("api_key")
     guild_id = request.form.get("guild_id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == "":
         new_server = Server(guild_id=guild_id)
         db.session.add(new_server)
         db.session.commit()
@@ -75,7 +84,7 @@ def get_starting_amount():
     key = request.form.get("api_key")
     guild_id = request.form.get("guild_id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == "":
         server = Server.query.filter_by(guild_id=guild_id).first()
 
         return_json = {"response": 200, "starting_amount": server.starting_amount}
@@ -90,7 +99,7 @@ def get_currency():
     key = request.form.get("api_key")
     guild_id = request.form.get("guild_id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == "":
         server = Server.query.filter_by(guild_id=guild_id).first()
 
         return_json = {"response": 200, "currency": server.currency}
@@ -105,7 +114,7 @@ def get_banker_role():
     key = request.form.get("api_key")
     guild_id = request.form.get("guild_id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == "":
         server = Server.query.filter_by(guild_id=int(guild_id)).first()
 
         try:
@@ -124,7 +133,7 @@ def get_max_accounts():
     key = request.form.get("api_key")
     guild_id = request.form.get("guild_id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == "":
         server = Server.query.filter_by(guild_id=guild_id).first()
 
         return_json = {"response": 200, "max_accounts": server.max_accounts}
@@ -141,7 +150,7 @@ def set_starting_amount():
     new_value = request.form.get("new_value")
     person = request.form.get("person")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         server = Server.query.filter_by(guild_id=guild_id).first()
         server.starting_amount = new_value
         db.session.commit()
@@ -162,7 +171,7 @@ def set_currency():
     new_value = request.form.get("new_value")
     person = request.form.get("person")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         server = Server.query.filter_by(guild_id=guild_id).first()
         server.currency = new_value
         db.session.commit()
@@ -184,7 +193,7 @@ def set_banker_role():
 
     person = request.form.get("person")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         server = Server.query.filter_by(guild_id=guild_id).first()
         server.banker_role = new_value
         db.session.commit()
@@ -206,7 +215,7 @@ def set_max_accounts():
 
     person = request.form.get("person")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         server = Server.query.filter_by(guild_id=guild_id).first()
         server.max_accounts = new_value
         db.session.commit()
@@ -227,7 +236,7 @@ def create_user():
     user_id = request.form.get("user_id")
     user_name = request.form.get("user_name")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         exists = User.query.filter_by(
             user_id=user_id, user_associated_guild=guild_id
         ).first()
@@ -284,7 +293,7 @@ def create_property():
     value = request.form.get("value")
     person = request.form.get("person")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         exists = Property.query.filter_by(property_name=name).first()
         if exists:
             return_json = {"response": 301}
@@ -310,7 +319,7 @@ def get_users_properties():
     guild_id = request.form.get("guild_id")
     user_id = request.form.get("user_id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         properties = Property.query.filter_by(
             property_owner_id=user_id, property_guild=guild_id
         )
@@ -338,7 +347,7 @@ def get_all_properties():
     key = request.form.get("api_key")
     guild_id = request.form.get("guild_id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         properties = Property.query.filter_by(property_guild=guild_id)
 
         rtn_lst = []
@@ -364,7 +373,7 @@ def get_all_unowned_properties():
     key = request.form.get("api_key")
     guild_id = request.form.get("guild_id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         properties = Property.query.filter_by(
             property_guild=guild_id, property_owner_id=None
         )
@@ -393,7 +402,7 @@ def get_property_name():
     guild_id = request.form.get("guild_id")
     id = request.form.get("id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         property = Property.query.filter_by(property_guild=guild_id, id=id).first()
 
         if not property:
@@ -413,7 +422,7 @@ def get_property_value():
     guild_id = request.form.get("guild_id")
     name = request.form.get("name")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         property = Property.query.filter_by(
             property_guild=guild_id, property_name=name
         ).first()
@@ -439,7 +448,7 @@ def get_property_owner():
     guild_id = request.form.get("guild_id")
     name = request.form.get("name")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         property = Property.query.filter_by(
             property_guild=guild_id, property_name=name
         ).first()
@@ -461,7 +470,7 @@ def get_property_exists():
     guild_id = request.form.get("guild_id")
     name = request.form.get("name")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         property = Property.query.filter_by(
             property_guild=guild_id, property_name=name
         ).first()
@@ -479,7 +488,7 @@ def set_property_name():
     id = request.form.get("id")
     new_value = request.form.get("new_value")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         property = Property.query.filter_by(id=id).first()
         property.property_name = new_value
         db.session.commit()
@@ -499,7 +508,7 @@ def set_property_value():
     new_value = request.form.get("new_value")
     person = request.form.get("person")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         property = Property.query.filter_by(
             property_name=name, property_guild=guild
         ).first()
@@ -523,7 +532,7 @@ def set_property_owner():
     new_value = request.form.get("new_value")
     person = request.form.get("person")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         property = Property.query.filter_by(
             property_name=name, property_guild=guild
         ).first()
@@ -546,7 +555,7 @@ def delete_property():
     guild = request.form.get("guild")
     name = request.form.get("name")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         property = Property.query.filter_by(
             property_guild=guild, property_name=name
         ).first()
@@ -581,7 +590,7 @@ def get_tasks():
     key = request.form.get("api_key")
     guild_id = request.form.get("guild_id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         tasks = Task.query.filter_by(guild_id=guild_id)
 
         rtn_lst = []
@@ -611,7 +620,7 @@ def get_all_tasks_today():
 
     print(key)
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP" or key == None:
+    if key == " " or key == None:
         tasks = Task.query.filter(
             Task.next_due <= datetime.datetime.today().date()
         ).all()
@@ -642,7 +651,7 @@ def get_task():
     key = request.form.get("api_key")
     id = request.form.get("id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         task = Task.query.filter_by(id=id).first()
 
         rtn_lst = [
@@ -667,7 +676,7 @@ def get_task_type():
     key = request.form.get("api_key")
     id = request.form.get("id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         task = Task.query.filter_by(id=id).first()
 
         return_json = {"response": 200, "type": task.type}
@@ -682,7 +691,7 @@ def get_task_target_id():
     key = request.form.get("api_key")
     id = request.form.get("id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         task = Task.query.filter_by(id=id).first()
 
         return_json = {"response": 200, "target_id": task.target_id}
@@ -697,7 +706,7 @@ def set_next_due():
     key = request.form.get("api_key")
     id = request.form.get("id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         task = Task.query.filter_by(id=id).first()
         frequency = task.frequency * 24 * 60 * 60
         now = time.time()
@@ -719,7 +728,7 @@ def get_task_frequency():
     key = request.form.get("api_key")
     id = request.form.get("id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         task = Task.query.filter_by(id=id).first()
 
         return_json = {"response": 200, "frequency": task.frequency}
@@ -738,7 +747,7 @@ def create_task():
     amount = request.form.get("amount")
     frequency = request.form.get("frequency")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         new_task = Task(
             guild_id=guild_id,
             type=task_type,
@@ -785,7 +794,7 @@ def create_account():
         account_user_id=user_id, account_guild_id=guild_id
     )
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         if accounts.count() == server.max_accounts:
             return_json = {"response": 400}
             return jsonify(return_json)
@@ -817,7 +826,7 @@ def get_account():
     key = request.form.get("api_key")
     id = request.form.get("id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         account = Account.query.filter_by(id=id).first()
 
         rtn_lst = [
@@ -841,7 +850,7 @@ def get_default_account():
     user_id = request.form.get("user_id")
     guild_id = request.form.get("guild_id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         user = User.query.filter_by(
             user_id=user_id, user_associated_guild=guild_id
         ).first()
@@ -878,7 +887,7 @@ def set_default_account():
     user_id = request.form.get("user_id")
     guild = request.form.get("guild_id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         user = User.query.filter_by(
             user_id=user_id, user_associated_guild=guild
         ).first()
@@ -898,7 +907,7 @@ def get_accounts():
     user_id = request.form.get("user_id")
     guild_id = request.form.get("guild_id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         accounts = Account.query.filter_by(
             account_user_id=user_id, account_guild_id=guild_id
         )
@@ -928,7 +937,7 @@ def delete_account():
     id = request.form.get("id")
     account = Account.query.filter_by(id=id).first()
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         accounts = Account.query.filter_by(
             account_user_id=account.account_user_id,
             account_guild_id=account.account_guild_id,
@@ -952,7 +961,7 @@ def get_account_name():
     key = request.form.get("api_key")
     id = request.form.get("id")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         account = Account.query.filter_by(id=id).first()
 
         return_json = {"response": 200, "account_name": account.account_name}
@@ -968,7 +977,7 @@ def set_account_name():
     id = request.form.get("id")
     name = request.form.get("name")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         account = Account.query.filter_by(id=id).first()
         account.account_name = name
         db.session.commit()
@@ -986,7 +995,7 @@ def deposit():
     id = request.form.get("id")
     amount = request.form.get("amount")
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         account = Account.query.filter_by(id=id).first()
         account.account_balance += int(amount)
         db.session.commit()
@@ -1011,7 +1020,7 @@ def withdraw():
     amount = request.form.get("amount")
     cannot_negative = request.form.get("amount") if "amount" in request.form else False
 
-    if key == "mJHZZzmrKm%TpvN95n27hvb4kjnQ5HP":
+    if key == " ":
         account = Account.query.filter_by(id=id).first()
         if cannot_negative and account.account_balance - int(amount) < 0:
             return_json = {"response": 400}

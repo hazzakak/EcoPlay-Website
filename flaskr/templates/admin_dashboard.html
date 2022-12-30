@@ -1,3 +1,11 @@
+<!-- ECOPLAY
+An economy system which connects discord and a website to enable roleplay communities and other fun communities to have an economic system.
+
+Copyright (C) 2022, Harry Smith.
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program. If not, see https://www.gnu.org/licenses.
+You may contact me via hazzakak@gmail.com -->
 {% extends "base.html" %}
 {% block title %}Admin{% endblock %}
 {% block nav_admin_dash %}active{% endblock %}
@@ -28,30 +36,40 @@
                             <label for="maxAccounts">Max Accounts</label>
                             <input type="number" name="max_accounts" class="form-control {% if banker %}disabled{% endif %}" {% if banker %}disabled{% endif %} id="maxAccounts"
                                    aria-describedby="maxAccountsHelp" value="{{ server.max_accounts }}">
-                            <small id="maxAccountsHelp" class="form-text text-muted">How many accounts a user can
-                                open.</small>
+                            <small id="maxAccountsHelp" class="form-text text-muted">
+                                How many accounts a user can
+                                open.
+                            </small>
                         </div>
                         <div class="form-group">
                             <label for="bankerRole">Banker Role</label>
                             <input type="number" name="banker_role" class="form-control {% if banker %}disabled{% endif %}" {% if banker %}disabled{% endif %} id="bankerRole"
                                    aria-describedby="bankerRoleHelp" value="{{ server.banker_role }}">
-                            <small id="bankerRoleHelp" class="form-text text-muted">The ID of the role of which Bankers
+                            <small id="bankerRoleHelp" class="form-text text-muted">
+                                The ID of the role of which Bankers
                                 have, for functions such as deleting accounts, adding money, and resetting
-                                users.</small>
+                                users.
+                            </small>
                         </div>
                         <div class="form-group">
                             <label for="currency">Currency</label>
                             <input type="text" name="currency" class="form-control" {% if banker %}disabled{% endif %} id="currency"
                                    aria-describedby="currencyHelp" value="{{ server.currency }}">
-                            <small id="currencyHelp" class="form-text text-muted">The currency form that will show in
-                                front of all currency numbers. (ex. £)</small>
+                            <small id="currencyHelp" class="form-text text-muted">
+                                The currency form that will show in
+                                front of all currency numbers. (ex. £)
+                            </small>
                         </div>
                         <div class="form-group">
                             <label for="startingAmount">Starting Amount</label>
-                            <div class="dollar"><input type="number" name="starting_amount" {% if banker %}disabled{% endif %} class="form-control {% if banker %}disabled{% endif %}" id="startingAmount"
-                                                       aria-describedby="startingAmountHelp" value="{{ server.starting_amount }}"></div>
-                            <small id="startingAmountHelp" class="form-text text-muted">The amount of money a new user
-                                will start with.</small>
+                            <div class="dollar">
+                                <input type="number" name="starting_amount" {% if banker %}disabled{% endif %} class="form-control {% if banker %}disabled{% endif %}" id="startingAmount"
+                                       aria-describedby="startingAmountHelp" value="{{ server.starting_amount }}">
+                            </div>
+                            <small id="startingAmountHelp" class="form-text text-muted">
+                                The amount of money a new user
+                                will start with.
+                            </small>
                         </div>
                         <input type="submit" class="btn btn-primary" value="Update Settings" form="serverSettings">
                         <button type="reset" class="btn btn-light">Reset Changes</button>

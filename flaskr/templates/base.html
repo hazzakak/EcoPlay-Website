@@ -1,3 +1,11 @@
+<!-- ECOPLAY
+An economy system which connects discord and a website to enable roleplay communities and other fun communities to have an economic system.
+
+Copyright (C) 2022, Harry Smith.
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program. If not, see https://www.gnu.org/licenses.
+You may contact me via hazzakak@gmail.com -->
 <!doctype html>
 <html lang="en" class="h-100">
 <head>
@@ -22,23 +30,19 @@
     <meta name="theme-color" content="#7952b3">
 
     <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
         }
-      }
 
-
-
-
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
     </style>
     <!-- Custom styles for this template -->
     <link rel="stylesheet" href="{{ url_for('static', filename='cover.css') }}">
@@ -50,46 +54,49 @@
 </head>
 <body class="d-flex h-100 text-center text-white bg-dark" style="box-shadow:none;">
 
-<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-    <header class="{% block header %}{% endblock %}">
-        <div>
-            <nav class="nav nav-masthead justify-content-center float-md-end">
-                <a class="navbar-brand" href="/" style="padding-top:0;">
-                    <img src="{{ url_for('static', filename='nav_logo.png') }}" height="50" alt="">
-                </a>
-                <a class="nav-link {% block nav_home %}{% endblock %}" style="margin-bottom:20px;" aria-current="page" href="/">Home</a>
-                <a class="nav-link {% block nav_docs %}{% endblock %}" style="margin-bottom:20px;" href="https://docs.ecoplay.xyz/">Docs</a>
-                {% if logged_in %}
-                <a class="nav-link {% block nav_personal_dash %}{% endblock %}" style="margin-bottom:20px;" href="/personal-dashboard">Personal
-                    Dashboard</a>
-                <a class="nav-link {% block nav_admin_dash %}{% endblock %}" style="margin-bottom:20px;" href="/admin-dashboard">Admin Dashboard</a>
-                <a class="nav-link text-danger" style="margin-bottom:20px;" href="/logout">Logout</a>
-                {% else %}
-                <a class="nav-link {% block nav_login %}{% endblock %}" style="margin-bottom:20px;" href="/login">Login</a>
-                {% endif %}
-            </nav>
-        </div>
-    </header>
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="{% block header %}{% endblock %}">
+            <div>
+                <nav class="nav nav-masthead justify-content-center float-md-end">
+                    <a class="navbar-brand" href="/" style="padding-top:0;">
+                        <img src="{{ url_for('static', filename='nav_logo.png') }}" height="50" alt="">
+                    </a>
+                    <a class="nav-link {% block nav_home %}{% endblock %}" style="margin-bottom:20px;" aria-current="page" href="/">Home</a>
+                    <a class="nav-link {% block nav_docs %}{% endblock %}" style="margin-bottom:20px;" href="https://docs.ecoplay.xyz/">Docs</a>
+                    {% if logged_in %}
+                    <a class="nav-link {% block nav_personal_dash %}{% endblock %}" style="margin-bottom:20px;" href="/personal-dashboard">
+                        Personal
+                        Dashboard
+                    </a>
+                    <a class="nav-link {% block nav_admin_dash %}{% endblock %}" style="margin-bottom:20px;" href="/admin-dashboard">Admin Dashboard</a>
+                    <a class="nav-link text-danger" style="margin-bottom:20px;" href="/logout">Logout</a>
+                    {% else %}
+                    <a class="nav-link {% block nav_login %}{% endblock %}" style="margin-bottom:20px;" href="/login">Login</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </header>
 
-    <main class="px-3">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        {% for category, message in messages %}
-        <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
-            {{message}}
-            <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
-        </div>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
-        {% block content %}{% endblock %}
-    </main>
+        <main class="px-3">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+                {{message}}
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </main>
 
-    <footer class="mt-auto text-white-50">
-        <p><a href="https://ecoplay.xyz/" class="text-white">EcoPlay Dashboard</a>, by <a
-                href="https://discord.gg/eneRu6K" class="text-white">Harry @ JBots</a>.{% if session["userid"] == "302454373882003456" %} | <a href="/owner-dashboard">Owner Dashboard</a>{% endif %}</p>
-    </footer>
-</div>
+        <footer class="mt-auto text-white-50">
+            <p>
+                <a href="https://ecoplay.xyz/" class="text-white">EcoPlay Dashboard</a>, by <a href="https://discord.gg/eneRu6K" class="text-white">Harry @ JBots</a>.{% if session["userid"] == "302454373882003456" %} | <a href="/owner-dashboard">Owner Dashboard</a>{% endif %}
+            </p>
+        </footer>
+    </div>
 
 
 </body>
