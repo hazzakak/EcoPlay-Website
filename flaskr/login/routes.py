@@ -1,3 +1,12 @@
+# ECOPLAY
+# An economy system which connects discord and a website to enable roleplay communities and other fun communities to have an economic system.
+
+# Copyright (C) 2022, Harry Smith.
+# This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+# You may contact me via hazzakak@gmail.com
+
 import requests
 from flask import request, render_template, flash, session, url_for
 from werkzeug.utils import redirect
@@ -7,8 +16,8 @@ from . import login
 from ..models import User, Server
 
 API_ENDPOINT = "https://discord.com/api/v8"
-CLIENT_ID = "767749360586326026"
-CLIENT_SECRET = "B8JBIE949Ak5DZZ-6DsmD4mG20Rf1U_S"
+CLIENT_ID = ""
+CLIENT_SECRET = ""
 
 
 if os.environ.get("FLASK_ENV") == "production" or os.environ.get("FLASK_ENV") == None:
@@ -76,7 +85,7 @@ def discordlogin():
                 f"https://discord.com/api/v8/guilds/{i['id']}/members/{s['id']}",
                 headers={
                     "Authorization": "Bot "
-                    + "NzY3NzQ5MzYwNTg2MzI2MDI2.X42cTw.xDKKTtRJLNexwnmCac96YSKXVe4"
+                    + ""
                 },
             )
 

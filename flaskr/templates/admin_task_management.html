@@ -1,3 +1,11 @@
+<!-- ECOPLAY
+An economy system which connects discord and a website to enable roleplay communities and other fun communities to have an economic system.
+
+Copyright (C) 2022, Harry Smith.
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program. If not, see https://www.gnu.org/licenses.
+You may contact me via hazzakak@gmail.com -->
 {% extends "base.html" %}
 {% block title %}Admin{% endblock %}
 {% block nav_admin_dash %}active{% endblock %}
@@ -20,14 +28,16 @@
                         <select class="form-control" id="inputTaskType" name="task_type">
                             <option value="person">Person</option>
                             <option value="role">Role</option>
-                          </select>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label class="text-dark" for="inputTaskAmount">Amount</label>
-                        <div class="dollar"><input aria-describedby="accountNameHelp" class="form-control"
-                                                   id="inputTaskAmount"
-                                                   name="task_amount"
-                                                   placeholder="Enter account value" type="number"></div>
+                        <div class="dollar">
+                            <input aria-describedby="accountNameHelp" class="form-control"
+                                   id="inputTaskAmount"
+                                   name="task_amount"
+                                   placeholder="Enter account value" type="number">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="text-dark" for="inputTargetID">Target Discord ID</label>
@@ -63,34 +73,37 @@
         <div class="container">
             <div class="card-body tab-content">
                 <div class="tab-pane active" id="profile">
-                    <h6>TASK MANAGEMENT <button class="btn btn-light float-right" data-bs-target="#createPropertyModal"
-                        data-bs-toggle="modal"
-                        type="button"><i class="bi bi-plus"></i>
-                </button></h6>
+                    <h6>
+                        TASK MANAGEMENT <button class="btn btn-light float-right" data-bs-target="#createPropertyModal"
+                                                data-bs-toggle="modal"
+                                                type="button">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                    </h6>
                     <hr>
                     <table class="table table-dark table-striped border border-dark rounded" style="position: relative;height: 400px;overflow: auto;display:block;">
                         <thead>
                             <tr>
-                              <th scope="col">Task Type</th>
-                              <th scope="col">Task Target ID</th>
-                              <th scope="col">Task Amount</th>
-                              <th scope="col">Task Frequency</th>
-                              <th scope="col">Options</th>
+                                <th scope="col">Task Type</th>
+                                <th scope="col">Task Target ID</th>
+                                <th scope="col">Task Amount</th>
+                                <th scope="col">Task Frequency</th>
+                                <th scope="col">Options</th>
 
                             </tr>
-                          </thead>
-                          <tbody id="myTable">
+                        </thead>
+                        <tbody id="myTable">
                             {% for t in tasks %}
                             <tr>
-                              <td>{{ t.type }}</td>
-                              <td>{{ t.target_id }}</td>
-                              <td>{{ server.currency }}{{ t.amount }}</td>
-                              <td>{{ t.frequency }}</td>
-                              <td><a href="/admin/delete-task?task_id={{ t.id }}" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a></td>
+                                <td>{{ t.type }}</td>
+                                <td>{{ t.target_id }}</td>
+                                <td>{{ server.currency }}{{ t.amount }}</td>
+                                <td>{{ t.frequency }}</td>
+                                <td><a href="/admin/delete-task?task_id={{ t.id }}" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a></td>
                             </tr>
                             {% endfor %}
-                      </table>
-                      
+                    </table>
+
                 </div>
             </div>
         </div>

@@ -1,3 +1,12 @@
+<!-- ECOPLAY
+An economy system which connects discord and a website to enable roleplay communities and other fun communities to have an economic system.
+
+Copyright (C) 2022, Harry Smith.
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program. If not, see https://www.gnu.org/licenses.
+You may contact me via hazzakak@gmail.com -->
+
 {% extends "base.html" %}
 {% block title %}Admin{% endblock %}
 {% block nav_admin_dash %}active{% endblock %}
@@ -21,10 +30,12 @@
                     </div>
                     <div class="form-group">
                         <label class="text-dark" for="inputEditPropertyValue">Account Balance</label>
-                        <div class="dollar"><input aria-describedby="accountNameHelp" class="form-control"
-                                                   id="inputEditPropertyValue"
-                                                   name="account_value"
-                                                   placeholder="Enter account value" type="number"></div>
+                        <div class="dollar">
+                            <input aria-describedby="accountNameHelp" class="form-control"
+                                   id="inputEditPropertyValue"
+                                   name="account_value"
+                                   placeholder="Enter account value" type="number">
+                        </div>
                     </div>
                 </form>
             </div>
@@ -58,38 +69,38 @@
                     <table class="table table-dark table-striped border border-dark rounded" style="position: relative;height: 400px;overflow: auto;display:block;">
                         <thead>
                             <tr>
-                              <th scope="col">#</th>
-                              <th scope="col">Account Owner</th>
-                              <th scope="col">Account Balance</th>
-                              <th scope="col">Options</th>
+                                <th scope="col">#</th>
+                                <th scope="col">Account Owner</th>
+                                <th scope="col">Account Balance</th>
+                                <th scope="col">Options</th>
                             </tr>
-                          </thead>
-                          <tbody id="myTable">
+                        </thead>
+                        <tbody id="myTable">
                             {% for a in accounts %}
                             <tr>
-                              <td scope="row">{{ a.id }}</td>
-                              <td>{{ a.account_user.user_name }}</td>
-                              <td>{{ server.currency }}{{ a.account_balance }}</td>
-                              <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button"
-                                            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" data-bs-target="#editAccountModal"
-                                           data-bs-toggle="modal" href="#"
-                                           onclick="document.getElementById('inputEditPropertyID').value='{{ a.id }}';">Edit</a>
-                                        <a class="dropdown-item"
-                                           href="/admin/delete_account?account_id={{ a.id }}">Delete Property</a>
+                                <td scope="row">{{ a.id }}</td>
+                                <td>{{ a.account_user.user_name }}</td>
+                                <td>{{ server.currency }}{{ a.account_balance }}</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" data-bs-target="#editAccountModal"
+                                               data-bs-toggle="modal" href="#"
+                                               onclick="document.getElementById('inputEditPropertyID').value='{{ a.id }}';">Edit</a>
+                                            <a class="dropdown-item"
+                                               href="/admin/delete_account?account_id={{ a.id }}">Delete Property</a>
 
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
+                                </td>
                             </tr>
                             {% endfor %}
-                      </table>
-                      
+                    </table>
+
                 </div>
             </div>
         </div>
@@ -114,25 +125,25 @@
 
 <script>
     function myFunction() {
-      // Declare variables
-      var input, filter, table, tr, td, i, txtValue;
-      input = document.getElementById("myInput");
-      filter = input.value.toUpperCase();
-      table = document.getElementById("myTable");
-      tr = table.getElementsByTagName("tr");
-    
-      // Loop through all table rows, and hide those who don't match the search query
-      for (i = 0; i < tr.length; i++) {
-        td = tr[i].getElementsByTagName("td")[1];
-        if (td) {
-          txtValue = td.textContent || td.innerText;
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            tr[i].style.display = "";
-          } else {
-            tr[i].style.display = "none";
-          }
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
         }
-      }
     }
-    </script>
+</script>
 {% endblock %}
