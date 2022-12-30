@@ -1,8 +1,6 @@
 # UNUSED / SHUTDOWN
 Although some secret keys may exist in historical commits, all keys are now disabled/unused/reset as this was once a private respository.
 
-![gif](https://cdn.discordapp.com/attachments/874421999504597023/879632747688255548/image0.gif)
-
 # EcoPlay-Website
 An economy system which connects discord and a website to enable roleplay communities and other fun communities to have an economic system.
 
